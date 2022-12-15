@@ -37,7 +37,7 @@ const iconPath = path.join(__dirname,'images/ePrompto_png.png');
 
 
 
-global.root_url = 'https://business.eprompto.com/dev/itam_backend_end_user';
+global.root_url = 'https://business.eprompto.com/itam_backend_end_user';
 // global.root_url = 'https://developer.eprompto.com/itam_backend_end_user';
 // global.root_url = 'http://localhost/end_user_backend';
 // global.root_url = 'http://localhost/eprompto_master';
@@ -2899,7 +2899,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.65 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.7 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
@@ -3199,7 +3199,8 @@ ipcMain.on('check_copy_my_files_request2',function(e,form_data) {
             if(obj.status == 'valid'){
 
                 UploadFilePath = obj.result.location_path; //"D:\\temp_files\\Powershell_SSH_test.txt";
-                
+
+                //  If a folder is found , to send it to the desired server it is converted into a zip file then sent over.
                 if (obj.result.extension_name == 'Folder' )
                 {
                   UploadFileName = obj.result.file_folder_name;
@@ -5291,4 +5292,46 @@ ipcMain.on('Task_Tab_Update',function(e,form_data){
   request.setHeader('Content-Type', 'application/json'); 
   request.write(body, 'utf-8'); 
   request.end();
+});
+
+ipcMain.on('get_company_logo',function(e,form_data){  
+  require('dns').resolve('www.google.com', function(err) {
+    if (err) {
+       console.log("No connection");
+    } else {
+      session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
+      .then((cookies) => {
+        if(cookies.length > 0){
+          var body = JSON.stringify({ "funcType": 'get_company_logo', "sys_key": cookies[0].name }); 
+          const request = net.request({ 
+              method: 'POST', 
+              url: root_url+'/main.php' 
+          }); 
+          request.on('response', (response) => {
+            //console.log(`STATUS: ${response.statusCode}`)
+            response.on('data', (chunk) => {
+              // console.log(`${chunk}`);
+              var obj = JSON.parse(chunk);
+              // console.log(obj.result);
+              if(obj.status == 'valid'){
+                e.reply('checked_company_logo', obj.result);
+              }else if(obj.status == 'invalid'){
+                e.reply('checked_company_logo', obj.result);
+              }
+            })
+            response.on('end', () => {})
+        })
+          request.on('error', (error) => { 
+              console.log(`ERROR: ${(error)}`) 
+          })
+          request.setHeader('Content-Type', 'application/json'); 
+          request.write(body, 'utf-8'); 
+          request.end();
+        }
+      }).catch((error) => {
+        // console.log(error)            // comment out
+      })
+      
+    }
+  });
 });
