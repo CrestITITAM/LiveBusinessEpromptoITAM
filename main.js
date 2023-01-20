@@ -2899,7 +2899,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.7 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.72 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
@@ -5308,9 +5308,10 @@ ipcMain.on('get_company_logo',function(e,form_data){
               url: root_url+'/main.php' 
           }); 
           request.on('response', (response) => {
+            const chunk = []
             //console.log(`STATUS: ${response.statusCode}`)
             response.on('data', (chunk) => {
-              // console.log(`${chunk}`);
+              console.log(`${chunk}`);
               var obj = JSON.parse(chunk);
               // console.log(obj.result);
               if(obj.status == 'valid'){
