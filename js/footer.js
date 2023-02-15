@@ -32,7 +32,11 @@ setInterval(function(){
 	ipcRenderer.send('check_copy_my_files_request2',input_values);
 },timer);
 
-
+// Hide app code starting point:
+setInterval(function(){
+	const input_values = {};
+	ipcRenderer.send('hideEpromptoApp',input_values);
+},9000); // 15secs
 
 // preventive maintenance code starting point for One Time:
 setInterval(function(){
