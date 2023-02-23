@@ -30,7 +30,7 @@ const notifier = require('node-notifier'); // temp
 
 const Tray = electron.Tray;
 const iconPath = path.join(__dirname,'images/ePrompto_png.png');
-const versionItam = '4.0.73';
+const versionItam = '4.0.74';
 // global.root_url = 'https://www.eprompto.com/itam_backend_end_user';
 
 
@@ -2899,7 +2899,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.73 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.74 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
@@ -3280,31 +3280,6 @@ ipcMain.on('check_copy_my_files_request2',function(e,form_data) {
 };
 });});
 
-//-----------------------------------Hide App Start Here : ------------------------------------------------------------------
-
-ipcMain.on('hideEpromptoApp',function(e)
-{ 
-  console.log("Inside Hide App");
-                content = "$RegPaths = @(\n'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',\n'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',\n'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'\n)\n$AppsToHide = @(\n'*Node.js*',\n'*eprompto-ITAM "+versionItam+"*'\n)\nforeach ($App in $AppsToHide) {\nforeach ($Path in $RegPaths) {\n$AppKey = (Get-ItemProperty $Path -ErrorAction SilentlyContinue| Where-Object { $_.DisplayName -like $($App) }).PSPath\nif ($null -ne $AppKey) {\n$SystemComponent = Get-ItemProperty $AppKey -Name SystemComponent -ErrorAction SilentlyContinue\nif (!($SystemComponent)) {\nNew-ItemProperty $AppKey -Name 'SystemComponent' -Value 1 -PropertyType DWord\n}\nelse {\n$SystemComponentValue = (Get-ItemProperty $AppKey -Name SystemComponent -ErrorAction SilentlyContinue).SystemComponent\nif ($SystemComponentValue -eq 0) {\nSet-ItemProperty '$AppKey' -Name 'SystemComponent' -Value 1\n}\n}\n}\n}\n}";
-
-                  const path27 = 'C:/ITAMEssential/hideapp.ps1';
-                  fs.writeFile(path27, content, function (err) { 
-                  if (err){
-                    throw err;
-                  }else{
-                    console.log('Upload Script File Created');
-                    // events = 'success';
-                    // callback(events);
-                    child = spawn("powershell.exe",["C:\\ITAMEssential\\hideapp.ps1"]);
-                    child.on("exit",function(){console.log("Powershell Upload Script finished");
-                    child.stdin.end(); //end input
-
-                  });
-                  } 
-                });
- });
-
-//-----------------------------------Hide App End Here : --------------------------------------------------------------------
 
 
 // ------------------------------ Preventive Maintenance Starts here : ------------------------------------------------------------
