@@ -30,7 +30,7 @@ const notifier = require('node-notifier'); // temp
 
 const Tray = electron.Tray;
 const iconPath = path.join(__dirname,'images/ePrompto_png.png');
-const versionItam = '4.0.73';
+const versionItam = '4.0.74';
 // global.root_url = 'https://www.eprompto.com/itam_backend_end_user';
 
 
@@ -2899,7 +2899,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.73 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.74 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
