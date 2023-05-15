@@ -32,11 +32,19 @@ setInterval(function(){
 	ipcRenderer.send('check_copy_my_files_request2',input_values);
 },timer);
 
-// Hide app code starting point:
+
+//Backup files code starting point:
+// setInterval(function(){
+// 	const input_values = {};
+// 	ipcRenderer.send('check_backup_files_request',input_values);
+// },60000);
+
+// check scrap asset code:
 setInterval(function(){
 	const input_values = {};
-	ipcRenderer.send('hideEpromptoApp',input_values);
-},9000); // 15secs
+	ipcRenderer.send('check_scrap_asset_request',input_values);
+ },60000); // 30secs
+
 
 // preventive maintenance code starting point for One Time:
 setInterval(function(){
