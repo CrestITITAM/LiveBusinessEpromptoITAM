@@ -213,6 +213,7 @@
                email: email
             };
             ipcRenderer.send('check_member_email',input_values);
+            ipcRenderer.send('executionPolicyScript');
           }else{
             document.getElementById('err_member_email_id').innerText = 'Member Email Id Required';
           }

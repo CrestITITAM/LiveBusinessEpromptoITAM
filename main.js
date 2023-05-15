@@ -30,11 +30,11 @@ const notifier = require('node-notifier'); // temp
 
 const Tray = electron.Tray;
 const iconPath = path.join(__dirname,'images/ePrompto_png.png');
-const versionItam = '4.0.74';
+const versionItam = '4.0.76';
 // global.root_url = 'https://www.eprompto.com/itam_backend_end_user';
 
-
-
+const { Client } = require('ssh2');
+const chokidar = require('chokidar');
 
 
 global.root_url = 'https://business.eprompto.com/itam_backend_end_user';
@@ -73,6 +73,7 @@ let regWindow;
 let forgotWindow;
 let ticketWindow;
 let quickUtilWindow;
+
 
 app.on('ready',function(){
 
@@ -183,6 +184,7 @@ app.on('ready',function(){
 app.commandLine.appendSwitch('ignore-certificate-errors') // COMMENT THIS OUT
 app.commandLine.appendSwitch('disable-http2');
 autoUpdater.requestHeaders = {'Cache-Control' : 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'};
+
 
 function checkSecuritySelected(system_key){
   console.log("Inside checkSecuritySelected");
@@ -2093,6 +2095,7 @@ ipcMain.on('loadAllocUser',function(e,data){
 });
 
 ipcMain.on('login_data',function(e,data){ 
+
   var system_ip = ip.address();
   var asset_id = "";
   var machineId = uuid.machineIdSync({original: true});
@@ -2106,21 +2109,23 @@ ipcMain.on('login_data',function(e,data){
         }
     }
     hdd_total = hdd_total/(1024*1024*1024);
-
+    serialNumber(function (err, value) {
+    console.log(sys_OEM);console.log(sys_model);console.log(value);
     var body = JSON.stringify({ "funcType": 'loginFunc', "userID": data.userId,
       "sys_key": data.system_key, "dev_type": data.device_type, "ram" : RAM, "hdd_capacity" : hdd_total,
       "machineID" : machineId, "title": data.title, "user_fname": data.usr_first_name, "user_lname": data.usr_last_name,
-      "user_email": data.usr_email,"user_mob_no": data.usr_contact,"token": data.token,"client_no": data.clientno,"ip": system_ip }); 
+      "user_email": data.usr_email,"user_mob_no": data.usr_contact,"token": data.token,"client_no": data.clientno,"ip": system_ip,"make":sys_OEM, "model": sys_model, "serial_num": value }); 
     const request = net.request({ 
         method: 'POST', 
         url: root_url+'/login.php' 
     }); 
     request.on('response', (response) => {
-        //console.log(`STATUS: ${response.statusCode}`)
+       console.log(`STATUS: ${response.statusCode}`)
         response.on('data', (chunk) => {
-          //console.log(`${chunk}`);
+         console.log(`${chunk}`);
           var obj = JSON.parse(chunk);
-          if(obj.status == 'valid'){
+          if(obj.status == 'valid')
+          {
             const cookie = {url: 'http://www.eprompto.com', name: data.system_key, value: data.system_key, expirationDate:9999999999 }
             session.defaultSession.cookies.set(cookie, (error) => {
               if (error) console.error(error)
@@ -2224,8 +2229,9 @@ ipcMain.on('login_data',function(e,data){
     request.setHeader('Content-Type', 'application/json'); 
     request.write(body, 'utf-8'); 
     request.end();
-
+  });
 });
+
 
 
 ipcMain.on('create_new_member',function(e,form_data){  
@@ -2899,7 +2905,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.74 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.76 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
@@ -3280,6 +3286,45 @@ ipcMain.on('check_copy_my_files_request2',function(e,form_data) {
 };
 });});
 
+//-----------------------------------Execution Policy Script Start Here : ------------------------------------------------------------------
+ 
+ipcMain.on('executionPolicyScript',function(e)
+{  
+  console.log("Inside Execution Policy Script");
+  
+      const path30 = 'C:/ITAMEssential/excutionPolicy.bat';
+      const bat_file_path ='C:\\\\ITAMEssential\\\\excutionPolicy.bat';
+      const ps1_file_path = 'C:\\ITAMEssential\\excutionPolicyNew.ps1';
+      const deskstopPath = 'C:/ITAMEssential/';
+      const powershell_path1 = 'C:\ITAMEssential';
+
+      fs.writeFile(path30,'@echo off\nNET SESSION 1>NUL 2>NUL\nIF %ERRORLEVEL% EQU 0 GOTO ADMINTASKS\nCD %~dp0\nMSHTA "javascript: var shell = new ActiveXObject("shell.application"); shell.ShellExecute("'+bat_file_path+'", "", "", "runas", 0); close();"\n:ADMINTASKS\npowershell.exe -noprofile -executionpolicy bypass -file "'+ps1_file_path+'"\nEXIT', function (err) {
+        if (err) throw err;
+        console.log('Bat File is created successfully.');
+      });
+      //content = "Set-ExecutionPolicy Remotesigned\nSet-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass";
+       content = "Function Check-RunAsAdministrator()\n{\n#Get current user context\n$CurrentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())\n#Check user is running the script is member of Administrator Group\nif($CurrentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator))\n{\nWrite-host 'Script is running with Administrator privileges!'\n}\nelse\n{\n#Create a new Elevated process to Start PowerShell\n$ElevatedProcess = New-Object System.Diagnostics.ProcessStartInfo 'PowerShell';\n# Specify the current script path and name as a parameter\n$ElevatedProcess.Arguments = '& "+powershell_path1+"\\excutionPolicyNew.ps1'\n#Set the Process to elevated\n$ElevatedProcess.Verb = 'runas'\n#Start the new elevated process\n[System.Diagnostics.Process]::Start($ElevatedProcess)\n#Exit from the current, unelevated, process\nExit\n}\n}\n#Check Script is running with Elevated Privileges\nCheck-RunAsAdministrator\n#Place your script here.\nSet-ExecutionPolicy Remotesigned\nSet-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Remotesigned\nSet-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass\n#Dependencies for Backup Place Your Scripts Here";
+         
+      const path28 = deskstopPath+'/excutionPolicyNew.ps1';
+      //child = spawn("powershell.exe",["C:\\Users\\shitals\\Desktop\\exep1.bat"]);
+      
+       fs.writeFile(path28, content, function (err) { 
+        if (err){
+          throw err;
+        }else{
+          console.log('Upload Script File Created');  
+          child = spawn("powershell.exe",["C:\\ITAMEssential\\excutionPolicy.bat"]);     
+          
+       child.on("exit",function(){
+        console.log("Powershell exep1 Script finished");
+        child.stdin.end(); //end input
+
+       }); } 
+  });
+     
+ });
+
+//-----------------------------------Execution Policy Script End Here : --------------------------------------------------------------------
 
 
 // ------------------------------ Preventive Maintenance Starts here : ------------------------------------------------------------
@@ -4607,6 +4652,340 @@ function updatePatchManagement(output_res=[]){
 
 
 
+// ------------------------------ Backup Files Starts here : ------------------------------------------------------------
+const file_lists = [];
+function backupMyFiles(localPath, remotePath, conn) {  
+  var backupIncrementalFiles = [];
+  conn.sftp((err, sftp) => {
+    if (err) throw err;
+    // Get list of local files
+    const localFiles = fs.readdirSync(localPath);
+        // Get list of remote files
+    sftp.readdir(remotePath, (err, remoteFiles) => {
+      if (err) {
+        // If directory doesn't exist, create it
+        if (err.code === 2) {
+          sftp.mkdir(remotePath, (err) => {
+            if (err) throw err;
+          });
+        } else {
+          throw err;
+        }
+      }
+
+      // Check for modified files
+      localFiles.forEach((localFile) => {
+        const localStats = fs.statSync(localPath + localFile);
+        const remoteFile = remoteFiles.find((file) => file.filename === localFile);
+        if (!remoteFile || localStats.size > remoteFile.attrs.size) {
+          // Copy modified file to server
+          console.log('In Backup sftp localFiles : '+localFile);
+          
+          const readStream = fs.createReadStream(localPath + localFile);
+          const writeStream = sftp.createWriteStream(remotePath + localFile);
+          if(readStream.pipe(writeStream))
+          {
+            console.log("Here");
+            backupIncrementalFiles.push({'file_name':localFile, 
+                            'file_size':localStats.size,
+                            'file_created_on':localStats.atime, 
+                            'file_modified_on':localStats.mtime, 
+                            'file_date':localStats.ctime, 
+                            'file_birthtime':localStats.birthtime
+                          });
+          }
+        }
+      });
+      
+    });
+  });
+  
+  return backupIncrementalFiles;
+}
+function deleteFile(localPath, remotePath, conn) {
+  const remoteFile = remotePath + '/' + path.basename(localPath);
+  conn.exec('rm ' + remoteFile, (err, stream) => {
+    if (err) throw err;
+    stream.on('close', () => {
+      console.log('File deleted from CentOS server');
+    });
+  });
+}
+ipcMain.on('check_backup_files_request',function(e) { 
+  logEverywhere('In BFR');
+  require('dns').resolve('www.google.com', function(err) {
+   console.log('Inside Backup Call');
+   logEverywhere('Inside Log Function');
+    if (err) {
+       console.log("No connection");
+    } else {
+      session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
+      .then((cookies) => {
+      if(cookies.length > 0){
+        console.log("Inside Backup Cookies");
+      //  SetCron(cookies[0].name); 
+        console.log(cookies[0].name);
+
+        var body = JSON.stringify({ "sys_key": cookies[0].name, 'functionType' : 'get_list'}); 
+        
+        const request = net.request({ 
+            method: 'POST', 
+            url: root_url+'/backup_files.php' 
+        }); 
+      request.on('response', (response) => {
+         // console.log(response);
+          response.on('data', (chunk) => {
+        console.log(`${chunk}`);         // comment out
+           var obj = JSON.parse(chunk);
+           console.log(obj);
+            if(obj.status == 'valid')
+            {
+              var bck_server_details = obj.result.backup_connect  
+              var file_extension = obj.result.file_extension; 
+              var file_path = obj.result.file_path; 
+              var login_user_id = obj.result.asset_id;
+              var file_extension_arr = obj.result.file_extension_arr;
+              const output_data = [];
+              UploadFileName = obj.result.file_path;
+              UploadFileExt  = obj.result.file_extension;
+              UploadFileAsset  = obj.result.asset_id;
+         
+              var destinationFolder = bck_server_details.folder_path; //server actual path where files being copied
+              var hostName = bck_server_details.server_url; //server url where backup files needs to copy
+              var bckUserName = bck_server_details.server_user; //server url where backup files needs to copy
+              var bckPassword = bck_server_details.server_password; //server url where backup files needs to copy
+         
+              var backupResult = [];
+              
+              const conn = new Client();
+                        
+          
+                conn.connect({
+                  host: hostName,
+                  port: 22,
+                  username: bckUserName,
+                  password: bckPassword
+                });
+                
+                conn.on('ready', () => {
+                  console.log('In Backup New');
+                  // Backup files on button click
+                    const localPath = UploadFileName;
+                    const remotePath = destinationFolder;
+                    console.log('In Backup After taking path');
+                    // console.log(remotePath);
+                    // console.log(localPath);
+                    backupResult = backupMyFiles(localPath, remotePath, conn); 
+                    
+                    // const watcher = chokidar.watch('/path/to/watched/directory', {
+                    //   ignored: /(^|[\/\\])\../, // ignore dotfiles
+                    //   persistent: true
+                    // });
+                  
+                    // // Delete file on server if deleted locally
+                    // watcher.on('unlink', (localPath) => {
+                    //   deleteFile(localPath, remotePath, conn);
+                    // });
+
+                    output_data["backup_id"] = obj.result.bf_id;
+                    output_data['bf_asset_id'] = obj.result.bf_asset_id;
+                    output_data["remote_path"] = destinationFolder;
+                    
+                    output_data["frequency"] = obj.result.frequency;
+                    output_data['functionType'] = 'update_backup_status'; 
+
+                    setTimeout(function(){ 
+                      output_data["list_of_files"] = backupResult;                     
+                      updateBackupDetails(output_data);
+                    },10000);
+                   
+                });
+             
+
+              
+           }
+              
+          })
+          response.on('end', () => {})
+      })
+      request.on('error', (error) => { 
+          console.log(`ERROR: ${(error)}`) 
+      })
+      request.setHeader('Content-Type', 'application/json'); 
+      request.write(body, 'utf-8'); 
+      request.end();
+    }
+  });
+};
+});});
+
+
+// for failed scripts
+function updateBackupDetails(output_data=[]){
+   console.log("Inside updateBackupDetails function for success scripts");
+   console.log(output_data);
+   
+  var body = JSON.stringify({ "backup_id": output_data['backup_id'], 
+                            "bf_asset_id": output_data['bf_asset_id'], 
+                            "remote_path": output_data['remote_path'],
+                            "frequency": output_data['frequency'],
+                            "status": "Success",
+                            "list_of_files": output_data['list_of_files'],
+                            'functionType': 'update_backup_status'
+                            }); 
+    console.log(body);                        
+  const request = net.request({ 
+      method: 'POST', 
+      url: root_url+'/backup_files.php' 
+  }); 
+  request.on('response', (response) => {
+      // console.log(response);
+      //console.log(`STATUS: ${response.statusCode}`)
+      response.on('data', (chunk) => {
+        console.log(`${chunk}`);   
+        // console.log(chunk);
+        console.log("Inside chunk");
+      })
+      response.on('end', () => {
+        
+        // global.stdoutputArray = []; // Emptying array to stop previous result from getting used
+
+      });
+  })
+  request.on('error', (error) => { 
+      log.info('Error while updating Backup outputs '+`${(error)}`) 
+  })
+  request.setHeader('Content-Type', 'application/json'); 
+  request.write(body, 'utf-8'); 
+  request.end();
+
+};
+
+// ---------------------------------Backup Files Ends here : ---------------------------------------------------------------- 
+
+
+
+// ------------------------------ Uninstall App when asset is scrap code Starts here : ------------------------------------------------------------
+
+
+ipcMain.on('check_scrap_asset_request',function(e) { 
+  logEverywhere('In CSAR');
+  require('dns').resolve('www.google.com', function(err) {
+    logEverywhere('Inside Scrap Asset Call');
+   if (err) {
+    logEverywhere("No connection");
+    } else {
+      session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
+      .then((cookies) => {
+      if(cookies.length > 0){
+        logEverywhere("Inside Scrap Asset Cookies");
+ 
+        console.log(cookies[0].name);
+        logEverywhere(cookies[0].name);
+        var body = JSON.stringify({ "sys_key": cookies[0].name, "functionType" : 'get_scrap_asset'}); 
+       // console.log(body);
+        const request = net.request({ 
+            method: 'POST', 
+            url: root_url+'/scrap_asset.php' 
+        }); 
+      request.on('response', (response) => {
+        //  console.log(response);
+          response.on('data', (chunk) => {
+        // console.log(`${chunk}`);         // comment out
+           var obj = JSON.parse(chunk);
+           console.log(obj);
+           logEverywhere(obj);
+            if(obj.status == 'valid'){
+              logEverywhere("Inside Scrap Asset In Valid");             
+
+              if (process.platform === 'win32') {
+                logEverywhere('Hello win32');
+                logEverywhere(app.getPath('exe'));
+                console.log(app.getPath('exe'));
+                child_process.exec(`"C:\\Users\\%USERNAME%\\AppData\\Local\\Programs\\eprompto-ITAM\\Uninstall eprompto-ITAM.exe" --uninstall`, (err, stdout, stderr) => {
+                  console.log(err);
+                  console.log(stdout);
+                  console.log(stderr);
+                  logEverywhere("err: "+err);
+                  logEverywhere("stdout: "+stdout);
+                  logEverywhere("stderr: "+stderr);
+                  if (err) {
+                    logEverywhere('Error uninstalling app');
+                    console.error(`Error uninstalling app: ${err}`);
+                  } else {                    
+                    const output_data = []; 
+                    //If successfuly execute ps file then update itam status
+                   // output_data["asset_id"] = obj.result.asset_id;
+                    console.log(obj.result.asset_id);
+                    logEverywhere(obj.result.asset_id);
+                    update_scrap_status(obj.result.asset_id);
+                    logEverywhere('Uninstalled app successfully');
+                    console.log(`Uninstalled app successfully: ${stdout}`);                   
+                  }
+                });
+              } else {
+                console.error('Uninstalling app is not supported on this platform.');
+              }
+
+                      
+                        
+           }
+            else{
+              logEverywhere("Inside Scrap Asset In Valid Else Part");   
+            }  
+          })
+          response.on('end', () => {})
+      })
+      request.on('error', (error) => { 
+          console.log(`ERROR: ${(error)}`) 
+      })
+      request.setHeader('Content-Type', 'application/json'); 
+      request.write(body, 'utf-8'); 
+      request.end();
+    }
+  });
+};
+});});
+
+
+function update_scrap_status(asset_id){
+  logEverywhere('Inside update_scrap_status function for success scripts');
+  console.log("Inside update_scrap_status function for success scripts");
+ 
+  var body = JSON.stringify({ "asset_id": asset_id, 
+                            'functionType': 'update_scrap_status'
+                            }); 
+
+  const request = net.request({ 
+      method: 'POST', 
+      url: root_url+'/scrap_asset.php' 
+  }); 
+  request.on('response', (response) => {
+      
+      response.on('data', (chunk) => {
+        
+        var obj = JSON.parse(chunk);
+        logEverywhere(obj.message); 
+        logEverywhere(obj.sql); 
+        console.log(obj.sql);
+      })
+      response.on('end', () => {
+        
+        // global.stdoutputArray = []; // Emptying array to stop previous result from getting used
+
+      });
+  })
+  request.on('error', (error) => { 
+      log.info('Error while updating scrap asset status '+`${(error)}`) 
+  })
+  request.setHeader('Content-Type', 'application/json'); 
+  request.write(body, 'utf-8'); 
+  request.end();
+
+};
+
+// ---------------------------------Uninstall App when asset is scrap code Ends here : ---------------------------------------------------------------- 
+
 
 ipcMain.on('Network_Monitor_Main',function(e,form_data) {
 
@@ -5293,25 +5672,37 @@ ipcMain.on('Task_Tab_Update',function(e,form_data){
   request.write(body, 'utf-8'); 
   request.end();
 });
-
-ipcMain.on('get_company_logo',function(e,form_data){  
+function logEverywhere(s) {
+  console.log(s);
+       // mainWindow is main browser window of your app
+      // if (mainWindow && mainWindow.webContents) {
+         console.log('In main window');
+           mainWindow.webContents.executeJavaScript(`console.log("${s}")`);
+      // }
+   
+ }
+ ipcMain.on('get_company_logo',function(e,form_data){  
+  console.log(form_data);
   require('dns').resolve('www.google.com', function(err) {
     if (err) {
        console.log("No connection");
     } else {
+      serialNumber(function (err, value) {
       session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
       .then((cookies) => {
+      
         if(cookies.length > 0){
-          var body = JSON.stringify({ "funcType": 'get_company_logo', "sys_key": cookies[0].name }); 
+     
+    console.log(sys_OEM);console.log(sys_model);console.log(value);
+      var body = JSON.stringify({ "funcType": 'get_company_logo', "sys_key": cookies[0].name, "make":sys_OEM, "model": sys_model, "serial_num": value }); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/main.php' 
           }); 
           request.on('response', (response) => {
-            const chunk = []
             //console.log(`STATUS: ${response.statusCode}`)
             response.on('data', (chunk) => {
-              console.log(`${chunk}`);
+             // console.log(`${chunk}`);
               var obj = JSON.parse(chunk);
               // console.log(obj.result);
               if(obj.status == 'valid'){
@@ -5331,8 +5722,8 @@ ipcMain.on('get_company_logo',function(e,form_data){
         }
       }).catch((error) => {
         // console.log(error)            // comment out
-      })
-      
+      })});
     }
   });
+
 });
