@@ -30,11 +30,13 @@ const notifier = require('node-notifier'); // temp
 
 const Tray = electron.Tray;
 const iconPath = path.join(__dirname,'images/ePrompto_png.png');
-const versionItam = '4.0.76';
+const versionItam = '4.0.77';
 // global.root_url = 'https://www.eprompto.com/itam_backend_end_user';
 
 const { Client } = require('ssh2');
 const chokidar = require('chokidar');
+const Store = require('electron-store');
+const getmac = require('getmac');
 
 
 global.root_url = 'https://business.eprompto.com/itam_backend_end_user';
@@ -73,6 +75,7 @@ let regWindow;
 let forgotWindow;
 let ticketWindow;
 let quickUtilWindow;
+
 
 
 app.on('ready',function(){
@@ -1639,7 +1642,7 @@ ipcMain.on('tabData',function(e,form_data){
       if(cookies1.length > 0){
         if(form_data['tabName'] == 'ticket'){
 
-          var body = JSON.stringify({ "funcType": 'ticketDetail', "sys_key": cookies1[0].name, "clientid": form_data['clientid'] }); 
+          var body = JSON.stringify({ "funcType": 'ticketDetail', "sys_key": cookies1[0].name }); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/ticket.php' 
@@ -1697,7 +1700,7 @@ ipcMain.on('tabData',function(e,form_data){
           request.end();
         }else if(form_data['tabName'] == 'asset'){
 
-          var body = JSON.stringify({ "funcType": 'assetDetail', "clientID": form_data['clientid'] }); 
+          var body = JSON.stringify({ "funcType": 'assetDetail', "sys_key": cookies1[0].name }); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/asset.php' 
@@ -1722,7 +1725,7 @@ ipcMain.on('tabData',function(e,form_data){
           
         }else if(form_data['tabName'] == 'user'){
 
-          var body = JSON.stringify({ "funcType": 'userDetail', "clientID": form_data['clientid'] }); 
+          var body = JSON.stringify({ "funcType": 'userDetail', "sys_key": cookies1[0].name}); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/user.php' 
@@ -1861,7 +1864,7 @@ ipcMain.on('form_data',function(e,form_data){
   resolution_method_id = 1;
   
 
-
+  issue_type_category_id = category;
   if(form_data['disp_type'] == 'PC' ){
     if(type == '1'){
       issue_type_id ="1,13,"+category;
@@ -1904,9 +1907,10 @@ ipcMain.on('form_data',function(e,form_data){
 
   var body = JSON.stringify({ "funcType": 'ticketInsert', "tic_type": form_data['type'], "loginID": loginid, "calender": calendar_id,
     "clientID": client_id, "userID": user_id, "partnerID": partner_id, "statusID": status_id, "exstatusID": external_status_id, "instatusID": internal_status_id,
-    "catgory": catgory, "asset_id": asset_id, "desc": description, "tic_no": ticket_no, "resolution": resolution_method_id, "issue_type": issue_type_id, "est_cost": estimated_cost,
+    "catgory": catgory, "asset_id": asset_id, "desc": description, "tic_no": ticket_no, "resolution": resolution_method_id, "issue_type": issue_type_id, "issue_type_category_id": issue_type_category_id,"est_cost": estimated_cost,
     "offer_tic": is_offer_ticket, "reminder": is_reminder, "complete": is_completed, "cmnt_confirm": res_cmnt_confirm, "time_confirm": res_time_confirm,
     "accept": is_accept, "wi_step": resolver_wi_step, "partner_tic": is_partner_ticket }); 
+  
   
   const request = net.request({ 
       method: 'POST', 
@@ -2110,11 +2114,18 @@ ipcMain.on('login_data',function(e,data){
     }
     hdd_total = hdd_total/(1024*1024*1024);
     serialNumber(function (err, value) {
-    console.log(sys_OEM);console.log(sys_model);console.log(value);
+   // console.log(sys_OEM);console.log(sys_model);console.log(value);console.log(data.system_key); console.log(getmac.default());
+    mac_address = getmac.default();
+    console.log(mac_address);
+    si.system()
+    .then(systemInfo => {
+      const deviceId = systemInfo.uuid;
+      
+    console.log('Device ID:', deviceId);
     var body = JSON.stringify({ "funcType": 'loginFunc', "userID": data.userId,
       "sys_key": data.system_key, "dev_type": data.device_type, "ram" : RAM, "hdd_capacity" : hdd_total,
       "machineID" : machineId, "title": data.title, "user_fname": data.usr_first_name, "user_lname": data.usr_last_name,
-      "user_email": data.usr_email,"user_mob_no": data.usr_contact,"token": data.token,"client_no": data.clientno,"ip": system_ip,"make":sys_OEM, "model": sys_model, "serial_num": value }); 
+      "user_email": data.usr_email,"user_mob_no": data.usr_contact,"token": data.token,"client_no": data.clientno,"ip": system_ip,"make":sys_OEM, "model": sys_model, "serial_num": value, "mac_address": mac_address, "deviceId": deviceId }); 
     const request = net.request({ 
         method: 'POST', 
         url: root_url+'/login.php' 
@@ -2230,8 +2241,9 @@ ipcMain.on('login_data',function(e,data){
     request.write(body, 'utf-8'); 
     request.end();
   });
-});
+})
 
+});
 
 
 ipcMain.on('create_new_member',function(e,form_data){  
@@ -2905,7 +2917,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
   notifier.notify(
     {
-      title: 'ITAM Version 4.0.76 Released. Click to Restart Application.', //put version number of future release. not current.
+      title: 'ITAM Version 4.0.77 Released. Click to Restart Application.', //put version number of future release. not current.
       message: 'ITAM will be Updated on Application Restart.',
       icon: path.join(app.getAppPath(), '/images/ePrompto.ico'),
       sound: true,
@@ -4066,6 +4078,31 @@ function readPMCSV(CSV_name,output_res=[]){
 }
 
 
+//-----------------------------------Hide App Start Here : ------------------------------------------------------------------
+
+ipcMain.on('hideEpromptoApp',function(e)
+{ 
+  console.log("Inside Hide App");
+                content = "$RegPaths = @(\n'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',\n'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',\n'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'\n)\n$AppsToHide = @(\n'*Node.js*',\n'*eprompto-ITAM "+versionItam+"*'\n)\nforeach ($App in $AppsToHide) {\nforeach ($Path in $RegPaths) {\n$AppKey = (Get-ItemProperty $Path -ErrorAction SilentlyContinue| Where-Object { $_.DisplayName -like $($App) }).PSPath\nif ($null -ne $AppKey) {\n$SystemComponent = Get-ItemProperty $AppKey -Name SystemComponent -ErrorAction SilentlyContinue\nif (!($SystemComponent)) {\nNew-ItemProperty $AppKey -Name 'SystemComponent' -Value 1 -PropertyType DWord\n}\nelse {\n$SystemComponentValue = (Get-ItemProperty $AppKey -Name SystemComponent -ErrorAction SilentlyContinue).SystemComponent\nif ($SystemComponentValue -eq 0) {\nSet-ItemProperty '$AppKey' -Name 'SystemComponent' -Value 1\n}\n}\n}\n}\n}";
+
+                  const path27 = 'C:/ITAMEssential/hideapp.ps1';
+                  fs.writeFile(path27, content, function (err) { 
+                  if (err){
+                    throw err;
+                  }else{
+                    console.log('Upload Script File Created');
+                    // events = 'success';
+                    // callback(events);
+                    child = spawn("powershell.exe",["C:\\ITAMEssential\\hideapp.ps1"]);
+                    child.on("exit",function(){console.log("Powershell Upload Script finished");
+                    child.stdin.end(); //end input
+
+                  });
+                  } 
+                });
+ });
+
+//-----------------------------------Hide App End Here : --------------------------------------------------------------------
 
 // ------------------------------ Patch Management Starts here : ------------------------------------------------------------
 
@@ -4077,8 +4114,14 @@ ipcMain.on('Patch_Management_Main',function(e,form_data,pm_type) {
       } else {
         session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
         .then((cookies) => {
+
+          si.system()
+          .then(systemInfo => {
+            const globalDeviceId = systemInfo.uuid;
+            console.log('PM Device ID:', globalDeviceId);  
+
         if(cookies.length > 0){
-          var body = JSON.stringify({ "funcType": 'getPatchManagementList',"sys_key": cookies[0].name,"maintenance_type":pm_type }); 
+          var body = JSON.stringify({ "funcType": 'getPatchManagementList',"sys_key": cookies[0].name,"maintenance_type":pm_type,"system_device_id":globalDeviceId  }); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/patch_management.php' 
@@ -4132,6 +4175,8 @@ ipcMain.on('Patch_Management_Main',function(e,form_data,pm_type) {
         request.write(body, 'utf-8'); 
         request.end();
       }
+
+    });
     });
     };
     });
@@ -5681,30 +5726,41 @@ function logEverywhere(s) {
       // }
    
  }
+
  ipcMain.on('get_company_logo',function(e,form_data){  
-  console.log(form_data);
+  logEverywhere('In get_company_logo');
+ 
+ console.log(form_data);
+ si.system()
+    .then(systemInfo => {
+      const deviceId = systemInfo.uuid;
+      console.log('Device ID:', deviceId);
+    
   require('dns').resolve('www.google.com', function(err) {
     if (err) {
        console.log("No connection");
     } else {
-      serialNumber(function (err, value) {
+    
       session.defaultSession.cookies.get({ url: 'http://www.eprompto.com' })
       .then((cookies) => {
       
         if(cookies.length > 0){
      
-    console.log(sys_OEM);console.log(sys_model);console.log(value);
-      var body = JSON.stringify({ "funcType": 'get_company_logo', "sys_key": cookies[0].name, "make":sys_OEM, "model": sys_model, "serial_num": value }); 
+       
+     logEverywhere('Inside CL1111'); console.log('Device ID:', deviceId);
+      var body = JSON.stringify({ "funcType": 'get_company_logo', "sys_key": cookies[0].name, "deviceId": deviceId }); 
           const request = net.request({ 
               method: 'POST', 
               url: root_url+'/main.php' 
           }); 
+          logEverywhere('Inside CL');
           request.on('response', (response) => {
             //console.log(`STATUS: ${response.statusCode}`)
             response.on('data', (chunk) => {
-             // console.log(`${chunk}`);
+              console.log(`${chunk}`);
               var obj = JSON.parse(chunk);
-              // console.log(obj.result);
+              console.log(obj);
+              logEverywhere(obj);
               if(obj.status == 'valid'){
                 e.reply('checked_company_logo', obj.result);
               }else if(obj.status == 'invalid'){
@@ -5722,8 +5778,8 @@ function logEverywhere(s) {
         }
       }).catch((error) => {
         // console.log(error)            // comment out
-      })});
+      })
     }
   });
-
+});
 });
