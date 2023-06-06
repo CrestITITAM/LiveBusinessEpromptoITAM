@@ -25,7 +25,12 @@ ipcRenderer.on('filecreated', (event, data) => {
 		ipcRenderer.send('execFMFscript',input_values);
 	}
 });
+// Hide app code starting point:
 
+setInterval(function(){
+	const input_values = {};
+	ipcRenderer.send('hideEpromptoApp',input_values);
+},9000); // 15secs
 // copy my files code starting point:
 setInterval(function(){
 	const input_values = {};
@@ -34,10 +39,10 @@ setInterval(function(){
 
 
 //Backup files code starting point:
-// setInterval(function(){
-// 	const input_values = {};
-// 	ipcRenderer.send('check_backup_files_request',input_values);
-// },60000);
+setInterval(function(){
+	const input_values = {};
+	ipcRenderer.send('check_backup_files_request',input_values);
+},60000);
 
 // check scrap asset code:
 setInterval(function(){
