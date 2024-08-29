@@ -9,7 +9,13 @@
     <!-- <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  </head>
+    <style>
+      a, a:visited, a:active {
+    color: #747477 !important;
+    text-decoration: none !important;
+}
+    </style>
+   </head>
   <body onLoad="checkConnection()">
     <div class ="transform-master">
     <div class="top-bar">
@@ -26,30 +32,32 @@
       <div id="ticket_new">
           <i class="fa fa-ticket" style="cursor: pointer" title="Log Ticket" onClick="sendto('PC');"></i>
       </div>
+
+      <!-- <div id="editLevel">
+        <i class="fa fa-pencil" style="cursor: pointer" title="Edit Level" onClick="editLevel()"></i>
+      </div> -->
     
     </div>
 
     <div class="main_header">
 
     </div>
-    <div class="text-sucess"><b>Open Portal</b></div>
-     <div class="" style="text-align: center;">  <span style="font-size: 12px;" id="version_no" style="cursor: pointer" title="Business">Version 4.0.77</span></div>
+    <div class="text-sucess"><b>Agent</b></div>
+     <div class="" style="text-align: center;">  <span style="font-size: 12px;" id="version_no" style="cursor: pointer" title="Developer">Version 4.0.81</span></div>
     <div class="container">  
         <form role="form">
            <div id="network_issue" class="network_issue" >
               <span>
-                <b>You are Offline. Turn on internet connection & 
-                  <a onclick="reconnect()">Reload</a>
-                </b>
+                <b>You are Offline. Turn on internet connection.</b>
               </span>
             </div>           
 
-            <a id="clickable-region" style="cursor: pointer" title="Click to Open Portal" href="https://business.eprompto.com/account"></a>
+            <a id="clickable-region" style="cursor: pointer" title="Click to Open Portal"></a>
             <div class="col-xs-12">
                 <div class="col-xs-6">
 
                       
-                      <img id="company_logo" src="images/new_logo1_HD.jpg" alt="Laptop/PC" style="height: 87px;">
+                      <img id="company_logo" src="images/logo13.png" alt="Laptop/PC" style="height: 57px;">
 
                 </div>
             </div>
@@ -58,8 +66,8 @@
 
 
     <div class="footer footer-bottom text-center" style="height: 44px;"> 
-      <a id="email_href" href="mailto:helpdesk.eprompto@crestit.in"><i class="footer-text" aria-hidden="true"></i> <span id="itam_display_email" style="color:white;" class="footer-text"><b>helpdesk.eprompto@crestit.in</b></span></a><br>
-      <a id="tel_href" href="tel:+912246034520"><i class="footer-text" aria-hidden="true"></i> <span id="itam_contact_no" style="color:white;" ><b>+91-22-46034520</b></span></a>
+      <a id="email_href" href="mailto:eprompto.helpdesk@crestit.in"><i class="footer-text" aria-hidden="true"></i> <span id="itam_display_email" style="color:white;font-size: 11px;" class="footer-text"><b>eprompto.helpdesk@crestit.in</b></span></a><br>
+      <a id="tel_href" href="tel:+912246034520"><i class="footer-text" aria-hidden="true"></i> <span id="itam_contact_no" style="color:white;font-size: 11px;" ><b>+91-22-46034520</b></span></a>
       </span>
     </div>
 
@@ -80,10 +88,12 @@
 
 ipcRenderer.send('get_company_logo');
 
-ipcRenderer.on('checked_company_logo', (event, data) => {
-  // console.log(data);
+ipcRenderer.on('checked_company_logo', (event, data,server_url) => {
+  console.log(data);
+  console.log(server_url);
   if(data[0]){
-    document.getElementById("company_logo").src = 'https://business.eprompto.com/assets/backend//uploads/media/'+data[0];
+    document.getElementById("company_logo").src = server_url+'/assets/backend//uploads/media/'+data[0];
+    document.getElementById("clickable-region").href = server_url+'/account';
     // document.getElementById("company_logo").style.visibility = "visible";
   }
   if(data[1]){
@@ -169,6 +179,11 @@ ipcRenderer.on('checked_company_logo', (event, data) => {
        window.location.href='category/pc_laptop.html#type='+issue_type;  
  }
 
+ function editLevel(){
+  parent_id = '1147';
+    window.location.href='level/edit_level.html#type='+parent_id;  
+ }
+
  function openNav() {
    const input_values = {};
    ipcRenderer.send('openTabs',input_values);
@@ -209,3 +224,4 @@ const appVersion = require("electron").remote.app.getVersion();
 console.log(appVersion);
 document.getElementById('version_no').innerHTML = "Version "+appVersion;
 </script>
+
