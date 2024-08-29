@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>ITAM</title>
+<title></title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -49,11 +49,11 @@ article {
   	<nav class="nav_bar">
 		  <a class="tablinks" id="onloadactive" onclick="openTab(event, 'ticket')">Tickets</a> 
 		  <a class="tablinks" onclick="openTab(event, 'asset')">Asset</a> 
-		  <a class="tablinks" onclick="openTab(event, 'user')">User</a> 
+		  <!-- <a class="tablinks" onclick="openTab(event, 'user')">User</a>  -->
 		  <button type="button" class="pull-right getUtilise" onclick="openTab(event, 'quick_util')">GetUtilisation</button>
-		  <a class="tablinks" onclick="openTab(event, 'usage')">Utilization</a>
+		  <!-- <a class="tablinks" onclick="openTab(event, 'usage')">Utilization</a> -->
 		  <!-- <a class="tablinks" onclick="openTab(event, 'scripts')">Perform Maintenace</a> -->
-		  <a class="tablinks" onclick="openTab(event, 'task')">Tasks</a>
+		  <!-- <a class="tablinks" onclick="openTab(event, 'task')">Tasks</a> -->
 	</nav>
 </header>
 
@@ -172,39 +172,85 @@ $('#status_update_form').on('submit', function(e){
 </script>
 
 	<div class="col-md-12">
+		
 		<div id="asset" class="tabcontent">
 		  <h3>Asset Detail</h3><hr>
 		  <div id="asset-loader"></div>
-		  <table class="table table-borderless">
-		  	<!-- <tbody id="asset_body" class="tbody">
-		  	</tbody> -->
-		  	<tbody>
-				<tr>
-					<td class="content-align-head">Client Id :</td>
-					<td class="content-align-body"><span id="client_Id"></span></td>
-				</tr>
-				<tr>
-					<td class="content-align-head">System Name :</td>
-					<td class="content-align-body"><span id="sys_name"></span></td>
-				</tr>
-				<tr>
-					<td class="content-align-head">System Model :</td>
-					<td class="content-align-body"><span id="sys_model"></span></td>
-				</tr>
-				<tr>
-					<td class="content-align-head">BIOS Name :</td>
-					<td class="content-align-body"><span id="bios_name"></span></td>
-				</tr>
-				<tr>
-					<td class="content-align-head">OS Version :</td>
-					<td class="content-align-body"><span id="os_version"></span></td>
-				</tr>
-				<tr>
-					<td class="content-align-head">Processor Name :</td>
-					<td class="content-align-body"><span id="proc_name"></span></td>
-				</tr>
-			</tbody>
-		  </table>
+		  <div class="row">
+		  <div class="col-md-6">
+			<table class="table table-borderless">
+				<!-- <tbody id="asset_body" class="tbody">
+				</tbody> -->
+				<tbody>
+					<tr>
+						<td width="20%" class="content-align-head" style="text-align: left;width: 20% !important;">Member Name:</td>
+						<td width="80%" class="content-align-body" style="text-align: left;width: 80%;"><span id="member_name"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Asset Name:</td>
+						<td class="content-align-body"><span id="asset_name"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Email:</td>
+						<td class="content-align-body"><span id="asset_email"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Contact No.:</td>
+						<td class="content-align-body"><span id="asset_contact"></span></td>
+					</tr>
+					
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Level 1:</td>
+						<td class="content-align-body"><span id="asset_level1"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Level 2:</td>
+						<td class="content-align-body"><span id="asset_level2"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Install On:</td>
+						<td class="content-align-body"><span id="install_on"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Asset Tag:</td>
+						<td class="content-align-body"><span id="asset_tag"></span></td>
+					</tr>
+					<tr>
+						<input type="hidden" id="asset_id" value="asset_id">
+						<!-- <input type="hidden" value="client_Id"> -->
+					</tr>
+				</tbody>
+			</table>
+		   </div>
+		   <div class="col-md-6">
+			<table class="table table-borderless">
+				<!-- <tbody id="asset_body" class="tbody">
+				</tbody> -->
+				<tbody>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">System Name:</td>
+						<td class="content-align-body"><span id="sys_name"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">System Model:</td>
+						<td class="content-align-body"><span id="sys_model"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">BIOS Name:</td>
+						<td class="content-align-body"><span id="bios_name"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">OS Version:</td>
+						<td class="content-align-body"><span id="os_version"></span></td>
+					</tr>
+					<tr>
+						<td class="content-align-head" style="text-align: left;">Processor Name:</td>
+						<td class="content-align-body"><span id="proc_name"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		   </div>
+		</div>
 		</div>
 	</div>
 	<div class="col-md-12">
@@ -274,8 +320,6 @@ $('#status_update_form').on('submit', function(e){
 			
 			<div class="form-inline">
 				<h3>Instant Utilisation</h3><hr>
-				
-				
 			</div>
 			<br>
 			<div style="overflow: auto;">
@@ -291,6 +335,10 @@ $('#status_update_form').on('submit', function(e){
 	    				<td class="content-align-head">Used RAM :</td>
 	    				<td class="content-align-body"><span id="used_ram"></span></td>
 	    			</tr>
+					<tr>
+	    				<td class="content-align-head">Free RAM :</td>
+	    				<td class="content-align-body"><span id="free_ram"></span></td>
+	    			</tr>
 	    			<tr>
 	    				<td class="content-align-head">Total HDD :</td>
 	    				<td class="content-align-body"><span id="total_hdd"></span></td>
@@ -298,6 +346,10 @@ $('#status_update_form').on('submit', function(e){
 	    			<tr>
 	    				<td class="content-align-head">Used HDD :</td>
 	    				<td class="content-align-body"><span id="used_hdd"></span></td>
+	    			</tr>
+					<tr>
+	    				<td class="content-align-head">Free HDD :</td>
+	    				<td class="content-align-body"><span id="free_hdd"></span></td>
 	    			</tr>
 	    			<tr>
 	    				<td class="content-align-head">Usage/Drive :</td>
@@ -324,7 +376,7 @@ $('#status_update_form').on('submit', function(e){
 <footer>
 	<div class="footer footer-bottom text-center "> 
 	    	<div class="col-md-12">
-				<span class="copy-text">Copyright © Crest IT Consulting Pvt. Ltd  2012 - 2022. All Rights Reserved</span>
+				<span class="copy-text">Copyright © Crest IT Consulting Pvt. Ltd  2012 - <span id="year"></span>. All Rights Reserved</span>
 			</div>
 	</div>
 </footer>
@@ -343,7 +395,7 @@ $('#status_update_form').on('submit', function(e){
 	const sysKey = remote.getGlobal('sysKey');
 
 	const client_id = remote.getGlobal('clientID');
-
+	document.getElementById("year").innerHTML = new Date().getFullYear(); 
 	function activeTab(){
 
 		var condition = navigator.onLine ? "ONLINE" : "OFFLINE"; 
@@ -440,10 +492,11 @@ $('#status_update_form').on('submit', function(e){
 	  
 	  const input_values = {
 	    tabName: tabName, 
-	    clientid : client_id,
+	   // clientid : remote.getGlobal('clientID'),
 	    from: from_date,
 	    to: to_date
 	  };
+	  console.log(input_values);
 	  tabcontent = document.getElementsByClassName("tabcontent");
 	  for (i = 0; i < tabcontent.length; i++) {
 	    tabcontent[i].style.display = "none";
@@ -675,14 +728,54 @@ $('#status_update_form').on('submit', function(e){
 	});
 
 	ipcRenderer.on('tabAssetReturn', (event, data) => { 
+		console.log(data);
 		document.getElementById('asset-loader').style.display='none';
 		if(data != ''){ 
-			document.getElementById('client_Id').innerHTML = data[0];
+		    document.getElementById('asset_id').value = data[6];
+			//document.getElementById('client_Id').innerHTML = data[0];
 		    document.getElementById('sys_name').innerHTML = data[1];
 		    document.getElementById('sys_model').innerHTML = data[2];
+			document.getElementById('proc_name').innerHTML = data[4];
 		    document.getElementById('bios_name').innerHTML = data[5];
 		    document.getElementById('os_version').innerHTML = data[3];
-		    document.getElementById('proc_name').innerHTML = data[4];
+		    document.getElementById('asset_name').innerHTML = data[9];
+			document.getElementById('member_name').innerHTML = data[7];
+			if(data[10] === '' || data[10] === 'null')
+			{
+				document.getElementById('asset_email').innerHTML = 'NA';
+			}
+			else
+				document.getElementById('asset_email').innerHTML = data[10];
+			if(data[11] === '' || data[11] === 'null')
+			{
+				document.getElementById('asset_contact').innerHTML = 'NA';
+			}
+			else
+				document.getElementById('asset_contact').innerHTML = data[11];
+			document.getElementById('install_on').innerHTML = data[12];
+			//document.getElementById('company_name').innerHTML = data[8];
+			if(data[13] === '' || data[13] === 'null')
+			{
+				document.getElementById('asset_level1').innerHTML = 'NA';
+			}
+			else
+				document.getElementById('asset_level1').innerHTML = data[13];
+			
+			if(data[14] === '' || data[14] === 'null')
+			{
+				document.getElementById('asset_level2').innerHTML = 'NA';
+			}
+			else
+				document.getElementById('asset_level2').innerHTML = data[14];
+			
+			if(data[15] === '' || data[15] === 'null')
+			{
+				document.getElementById('asset_tag').innerHTML = 'NA';
+			}
+			else
+				document.getElementById('asset_tag').innerHTML = data[15];
+
+
 		}
 	});
 
@@ -746,6 +839,8 @@ $('#status_update_form').on('submit', function(e){
 	    document.getElementById('cpu_usage').innerHTML = store['cpu_usage']+' %';
 	    document.getElementById('instant-loader').style.display='none';
 	    document.getElementById('instant_table').style.display='block';
+		document.getElementById('free_ram').innerHTML = store['free_ram']+' GB';
+		document.getElementById('free_hdd').innerHTML = store['hdd_free']+' GB';
 	});
 
 	function Export(){ 
@@ -755,7 +850,7 @@ $('#status_update_form').on('submit', function(e){
 		  
 		const input_values = {
 		    tabName: 'usage', 
-		    clientid : client_id,
+		   // clientid : client_id,
 		    from: from_date,
 		    to: to_date
 		  };
