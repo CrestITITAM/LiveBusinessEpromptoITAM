@@ -1,884 +1,1521 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title></title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        div.container {
+            width: 73%;
+            border: none;
+            margin: auto;
+        }
 
-div.container {
-    width: 73%;
-    border: none;
-    margin: auto;
-}
+        header,
+        footer {
+            padding: 1em;
+            color: #0a0fa7;
+            /*background-color: #007196;*/
+            clear: left;
+            text-align: center;
+        }
 
-header, footer {
-    padding: 1em;
-    color: #0a0fa7;
-    /*background-color: #007196;*/
-    clear: left;
-    text-align: center;
-}
-article {
-    padding: 1em;
-}
-
-
-
-</style>
-<!-- <script type="text/javascript" src="scripts.js"></script>
+        article {
+            padding: 1em;
+        }
+    </style>
+    <!-- <script type="text/javascript" src="scripts.js"></script>
 <link rel="stylesheet" href="styles.css"> -->
-<link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/all_in_one.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/all_in_one.css">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
-<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
+    <!-- CHART JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+        integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!--  -->
+
+    <!-- CALENDAR/DATEPICKER -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/locale/es/cdn.min.js"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!--  -->
 
 </head>
 
-<body">
+<body>
+<!-- onload="checkActiveTab()" -->
 
-<header class="header">
-  	<nav class="nav_bar">
-		  <a class="tablinks" id="onloadactive" onclick="openTab(event, 'ticket')">Tickets</a> 
-		  <a class="tablinks" onclick="openTab(event, 'asset')">Asset</a> 
-		  <!-- <a class="tablinks" onclick="openTab(event, 'user')">User</a>  -->
-		  <button type="button" class="pull-right getUtilise" onclick="openTab(event, 'quick_util')">GetUtilisation</button>
-		  <!-- <a class="tablinks" onclick="openTab(event, 'usage')">Utilization</a> -->
-		  <!-- <a class="tablinks" onclick="openTab(event, 'scripts')">Perform Maintenace</a> -->
-		  <!-- <a class="tablinks" onclick="openTab(event, 'task')">Tasks</a> -->
-	</nav>
-</header>
+    <header class="header">
+        <nav class="nav_bar">
+            <a class="tablinks" id="onloadactive" onclick="openTab(event, 'notification_policy')">Notification</a>
+            <a class="tablinks d-none" onclick="openTab(event, 'ticket')">Tickets</a>
+            <a class="tablinks" onclick="openTab(event, 'asset')">Asset</a>
+            <a class="tablinks" onclick="openTab(event, 'quick_util')">Get Utilization</a>
+            <!-- <a class="tablinks" onclick="openTab(event, 'user')">User</a>  -->
+            <!-- <button type="button" class="pull-right getUtilise" onclick="openTab(event, 'quick_util')">GetUtilisation</button> -->
+            <!-- <a class="tablinks" onclick="openTab(event, 'usage')">Utilization</a> -->
+            <!-- <a class="tablinks" onclick="openTab(event, 'scripts')">Perform Maintenace</a> -->
+            <!-- <a class="tablinks" onclick="openTab(event, 'task')">Tasks</a> -->
+        </nav>
+    </header>
 
-<article>
-	  <span id="no_internet_one" style="color:red; font-weight: bold;"></span>
-	<div class="col-md-12">	  	
-	  	<div id="ticket" class="tabcontent">
-	  		<div id="ticket_loader"></div>
-		  <h3>Ticket Detail</h3>
-		  
-		  <table id="ticket_table" class="table table-bordered">
-			  <thead class="thead-dark">
-			  	<tr>
-			  		<th>Ticket No</th>
-			  		<th>Issue</th>
-			  		<th>Reported On</th>
-			  		<th>Status</th>
-			  	</tr>
-			  </thead>
-			  <tbody id="ticket_body" class="tbody">
-			  	
-			  </tbody>
-		 </table>
-		</div>
-	</div>
-	
-	<div class="col-md-12">	  	
-		<div id="task" class="tabcontent">
-			<div id="task_loader"></div>
-		<h3>Task Detail</h3>
-		<div class="table-responsive-lg">
-		<table id="task_table" class="table table-bordered task_table">
-			<thead class="thead-dark">
-			  <tr>
-				<th>Title</th>
-				<th>Description</th>
-				<th>Status</th>
-				<th>Priority</th>
-				<th>Department</th>
-				<th>Client Name</th>
-				<th>Start Date</th>
-				<th>Due Date</th>
-				<th>Actions</th>
-			  </tr>
-			</thead>
-			<tbody id="task_body" class="task_body">
-				
-			</tbody>
-		  </table>
-		</div>
-	</div>
+    <article>
+        <span id="no_internet_one" style="color:red; font-weight: bold;"></span>
+        <div class="col-md-12">
+            <div id="ticket" class="tabcontent">
+                <div id="ticket_loader"></div>
+                <h3>Ticket Detail</h3>
 
-	<div class="modal" id="exampleModal1" tabindex="-1">
-		<div class="modal-dialog">
-		  <div class="modal-content">
-			<div class="modal-header">
-			  <h5 class="modal-title">Task Status Update</h5>
-			  <button type="button" onclick="document.getElementById('exampleModal1').style.display='none'" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-			  </button>
-			</div>
-			<div class="modal-body">
-			
-				<form id="status_update_form" name = "status_update_form" method="POST">
-					<div class="form-group row">
-						<input type="hidden" value="" id="task_id"/>
-						<!-- <input type="text" value="" id="member_id"/> -->
-					</div>
+                <table id="ticket_table" class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Ticket No</th>
+                            <th>Issue</th>
+                            <th>Reported On</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticket_body" class="tbody">
 
-					<div class="form-group row">
-					  <label for="task_status" class="col-md-3 col-form-label">Task Status</label>
-					  <div class="form-group col-md-9">
-						<select id="task_status" class="form-control">
-						  <option value="">Choose...</option>
-						  <option value="Open">Open</option>
-						  <option value="In-Progress">In-Progress</option>
-						  <option value="Completed">Completed</option>
-						</select>
-					  </div>
-					</div>
-					<div class="form-group row">
-					  <label for="task_remark" class="col-md-3 col-form-label">Remark</label>
-					  <div class="col-md-9">
-						<textarea id="task_remark" name="task_remark"  rows="4" cols="45"></textarea>
-					  </div>
-					</div>
-			</div>
-			<div class="modal-footer">
-			  <button type="button" onclick="document.getElementById('exampleModal1').style.display='none'" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			  <button type="submit" class="btn btn-primary">Update Task</button>
-			</div>
-		</form>
-		  </div>
-		</div>
-	  </div>
-</div>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="notification_policy" class="tabcontent">
+                <div id="notification_loader"></div>
+                <h3>Notification Detail</h3>
 
-<script>
-$('#status_update_form').on('submit', function(e){
+                <table id="notification_table" class="table table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Policy Title</th>
+                            <th>Policy Added On</th>
+                            <th>Policy Status</th>
+                            <th>Acceptance Status</th>
+                            <th>Acceptance Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notification_body" class="notification_body">
 
-	var task_id = document.status_update_form.task_id.value;
-	var task_status = document.status_update_form.task_status.value;
-	var task_remark = document.status_update_form.task_remark.value;
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-	const task_form_data = { 
-		task_id : task_id,
-		task_status: task_status,
-		task_remark: task_remark,
-		  };
-	ipcRenderer.send('Task_Tab_Update',task_form_data);
-	alert("Task Updated Succesfully");
-	$('#exampleModal1').modal('hide');
-	$('#task_table').reload();
-  e.preventDefault();
-});
-</script>
+        <div class="col-md-12">
+            <div id="task" class="tabcontent">
+                <div id="task_loader"></div>
+                <h3>Task Detail</h3>
+                <div class="table-responsive-lg">
+                    <table id="task_table" class="table table-bordered task_table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Department</th>
+                                <th>Client Name</th>
+                                <th>Start Date</th>
+                                <th>Due Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="task_body" class="task_body">
 
-	<div class="col-md-12">
-		
-		<div id="asset" class="tabcontent">
-		  <h3>Asset Detail</h3><hr>
-		  <div id="asset-loader"></div>
-		  <div class="row">
-		  <div class="col-md-6">
-			<table class="table table-borderless">
-				<!-- <tbody id="asset_body" class="tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal" id="exampleModal1" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Task Status Update</h5>
+                            <button type="button"
+                                onclick="document.getElementById('exampleModal1').style.display='none'" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <form id="status_update_form" name="status_update_form" method="POST">
+                                <div class="form-group row">
+                                    <input type="hidden" value="" id="task_id" />
+                                    <!-- <input type="text" value="" id="member_id"/> -->
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="task_status" class="col-md-3 col-form-label">Task Status</label>
+                                    <div class="form-group col-md-9">
+                                        <select id="task_status" class="form-control">
+                                            <option value="">Choose...</option>
+                                            <option value="Open">Open</option>
+                                            <option value="In-Progress">In-Progress</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="task_remark" class="col-md-3 col-form-label">Remark</label>
+                                    <div class="col-md-9">
+                                        <textarea id="task_remark" name="task_remark" rows="4" cols="45"></textarea>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button"
+                                onclick="document.getElementById('exampleModal1').style.display='none'"
+                                class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update Task</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $('#status_update_form').on('submit', function (e) {
+
+                var task_id = document.status_update_form.task_id.value;
+                var task_status = document.status_update_form.task_status.value;
+                var task_remark = document.status_update_form.task_remark.value;
+
+                const task_form_data = {
+                    task_id: task_id,
+                    task_status: task_status,
+                    task_remark: task_remark,
+                };
+                ipcRenderer.send('Task_Tab_Update', task_form_data);
+                alert("Task Updated Succesfully");
+                $('#exampleModal1').modal('hide');
+                $('#task_table').reload();
+                e.preventDefault();
+            });
+        </script>
+
+        <div class="col-md-12">
+
+            <div id="asset" class="tabcontent">
+                <h3>Asset Detail</h3>
+                <hr>
+                <div id="asset-loader"></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <!-- <tbody id="asset_body" class="tbody">
 				</tbody> -->
-				<tbody>
-					<tr>
-						<td width="20%" class="content-align-head" style="text-align: left;width: 20% !important;">Member Name:</td>
-						<td width="80%" class="content-align-body" style="text-align: left;width: 80%;"><span id="member_name"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Asset Name:</td>
-						<td class="content-align-body"><span id="asset_name"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Email:</td>
-						<td class="content-align-body"><span id="asset_email"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Contact No.:</td>
-						<td class="content-align-body"><span id="asset_contact"></span></td>
-					</tr>
-					
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Level 1:</td>
-						<td class="content-align-body"><span id="asset_level1"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Level 2:</td>
-						<td class="content-align-body"><span id="asset_level2"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Install On:</td>
-						<td class="content-align-body"><span id="install_on"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Asset Tag:</td>
-						<td class="content-align-body"><span id="asset_tag"></span></td>
-					</tr>
-					<tr>
-						<input type="hidden" id="asset_id" value="asset_id">
-						<!-- <input type="hidden" value="client_Id"> -->
-					</tr>
-				</tbody>
-			</table>
-		   </div>
-		   <div class="col-md-6">
-			<table class="table table-borderless">
-				<!-- <tbody id="asset_body" class="tbody">
+                            <tbody>
+                                <tr>
+                                    <td width="20%" class="content-align-head"
+                                        style="text-align: left;width: 20% !important;">Member Name:</td>
+                                    <td width="80%" class="content-align-body" style="text-align: left;width: 80%;">
+                                        <span id="member_name"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Asset Name:</td>
+                                    <td class="content-align-body"><span id="asset_name"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Email:</td>
+                                    <td class="content-align-body"><span id="asset_email"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Contact No.:</td>
+                                    <td class="content-align-body"><span id="asset_contact"></span></td>
+                                </tr>
+
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Level 1:</td>
+                                    <td class="content-align-body"><span id="asset_level1"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Level 2:</td>
+                                    <td class="content-align-body"><span id="asset_level2"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Install On:</td>
+                                    <td class="content-align-body"><span id="install_on"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Asset Tag:</td>
+                                    <td class="content-align-body"><span id="asset_tag"></span></td>
+                                </tr>
+                                <tr>
+                                    <input type="hidden" id="asset_id" value="asset_id">
+                                    <!-- <input type="hidden" value="client_Id"> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <!-- <tbody id="asset_body" class="tbody">
 				</tbody> -->
-				<tbody>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">System Name:</td>
-						<td class="content-align-body"><span id="sys_name"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">System Model:</td>
-						<td class="content-align-body"><span id="sys_model"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">BIOS Name:</td>
-						<td class="content-align-body"><span id="bios_name"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">OS Version:</td>
-						<td class="content-align-body"><span id="os_version"></span></td>
-					</tr>
-					<tr>
-						<td class="content-align-head" style="text-align: left;">Processor Name:</td>
-						<td class="content-align-body"><span id="proc_name"></span></td>
-					</tr>
-				</tbody>
-			</table>
-		   </div>
-		</div>
-		</div>
-	</div>
-	<div class="col-md-12">
-		<div id="user" class="tabcontent">
-		  <h3>User Detail</h3><hr>
-		  <div id="user-loader"></div>
-	    	<h4 style="text-align: center"><b><span id="username"></span></b></h4>  
-	    	<table border="0" style=" width: 100% !important">
-	    		<tbody>
-	    			<tr>
-	    				<td class="content-align-head">User Id :</td>
-	    				<td class="content-align-body"><span id="loginId"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Email Id :</td>
-	    				<td class="content-align-body"><span id="emailId"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Contact No :</td>
-	    				<td class="content-align-body"><span id="cont_num"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Joined On :</td>
-	    				<td class="content-align-body"><span id="join_date"></span></td>
-	    			</tr>
-	    		</tbody>
-	    	</table>
-		</div>
-	</div>
-	<div class="col-md-12">
-		<div id="usage" class="tabcontent" >
-			
-			<div class="form-inline">
-				<h3>Utilization Detail</h3><hr>
-				<div id="util-loader"></div>
-				<div class="form-group filter">
-				  <label for="from_date"> <b>From Date: &nbsp;</b></label><br>
-				  <input type="text" class="form-control" id="from_date">
-				</div>
-				<div class="form-group filter">
-				  <label for="to_date"> <b>To Date : &nbsp;</b></label>
-				  <input type="text" class="form-control" id="to_date">
-				</div>
-				<div class="form-group filter">
-				 <button class="btn btn-primary " onclick="dateFilter()">Submit</button>&nbsp;&nbsp;
-				 <button class="btn  btn-primary " onclick="Export()" >Export</button>
-				</div>
-			</div>
-			<br>
-			<div style="overflow: auto;">
-			   <table class="table table-bordered table-hover" id="utils_body"  width="100%" cellspacing="0">
-			        <thead class="thead-dark">
-			            <tr class="header-text" style="text-align: left;">
-			                <th width="10%">Date</th>
-					  		<th width="90%">Detail</th>
-			            </tr>
-			        </thead>
-			        <tbody>
-			        </tbody>
-    		 </table>
-			</div>
-		</div>
+                            <tbody>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">System Name:</td>
+                                    <td class="content-align-body"><span id="sys_name"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">System Model:</td>
+                                    <td class="content-align-body"><span id="sys_model"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">BIOS Name:</td>
+                                    <td class="content-align-body"><span id="bios_name"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">OS Version:</td>
+                                    <td class="content-align-body"><span id="os_version"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head" style="text-align: left;">Processor Name:</td>
+                                    <td class="content-align-body"><span id="proc_name"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="user" class="tabcontent">
+                <h3>User Detail</h3>
+                <hr>
+                <div id="user-loader"></div>
+                <h4 style="text-align: center"><b><span id="username"></span></b></h4>
+                <table border="0" style=" width: 100% !important">
+                    <tbody>
+                        <tr>
+                            <td class="content-align-head">User Id :</td>
+                            <td class="content-align-body"><span id="loginId"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="content-align-head">Email Id :</td>
+                            <td class="content-align-body"><span id="emailId"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="content-align-head">Contact No :</td>
+                            <td class="content-align-body"><span id="cont_num"></span></td>
+                        </tr>
+                        <tr>
+                            <td class="content-align-head">Joined On :</td>
+                            <td class="content-align-body"><span id="join_date"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div id="usage" class="tabcontent">
 
-	</div>
-	<div class="col-md-12">
-		<div id="quick_util" class="tabcontent" >
-			
-			<div class="form-inline">
-				<h3>Instant Utilisation</h3><hr>
-			</div>
-			<br>
-			<div style="overflow: auto;">
-				<div id="instant-loader"></div>
-				<div id="instant_table">
-			    <table class="table table-bordered table-hover center"  width="100%" cellspacing="0" >
-			       <tbody>
-	    			<tr>
-	    				<td class="content-align-head">Total RAM :</td>
-	    				<td class="content-align-body"><span id="total_ram"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Used RAM :</td>
-	    				<td class="content-align-body"><span id="used_ram"></span></td>
-	    			</tr>
-					<tr>
-	    				<td class="content-align-head">Free RAM :</td>
-	    				<td class="content-align-body"><span id="free_ram"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Total HDD :</td>
-	    				<td class="content-align-body"><span id="total_hdd"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Used HDD :</td>
-	    				<td class="content-align-body"><span id="used_hdd"></span></td>
-	    			</tr>
-					<tr>
-	    				<td class="content-align-head">Free HDD :</td>
-	    				<td class="content-align-body"><span id="free_hdd"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">Usage/Drive :</td>
-	    				<td class="content-align-body"><span id="usage_drive"></span></td>
-	    			</tr>
-	    			<tr>
-	    				<td class="content-align-head">CPU Used :</td>
-	    				<td class="content-align-body"><span id="cpu_usage"></span></td>
-	    			</tr>
-	    		  </tbody>
-    		    </table> 
-    		    </div>
-			</div>
-		</div>
+                <div class="form-inline">
+                    <h3>Utilization Detail</h3>
+                    <hr>
+                    <div id="util-loader"></div>
+                    <div class="form-group filter">
+                        <label for="from_date"> <b>From Date: &nbsp;</b></label><br>
+                        <input type="text" class="form-control" id="from_date">
+                    </div>
+                    <div class="form-group filter">
+                        <label for="to_date"> <b>To Date : &nbsp;</b></label>
+                        <input type="text" class="form-control" id="to_date">
+                    </div>
+                    <div class="form-group filter">
+                        <button class="btn btn-primary " onclick="dateFilter()">Submit</button>&nbsp;&nbsp;
+                        <button class="btn  btn-primary " onclick="Export()">Export</button>
+                    </div>
+                </div>
+                <br>
+                <div style="overflow: auto;">
+                    <table class="table table-bordered table-hover" id="utils_body" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr class="header-text" style="text-align: left;">
+                                <th width="10%">Date</th>
+                                <th width="90%">Detail</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-	<!-- </div>
+        </div>
+        <div class="col-md-12">
+            <div id="quick_util" class="tabcontent">
+
+                <div class="form-inline">
+                    <h3>Instant Utilization</h3>
+                    <hr>
+                    <select name="select-date-option" id="select-date-option" class="custom-select">
+                        <!-- DO NOT DELETE BELOW COMMENT -->
+                        <!-- <option value="last-60-seconds">Last 60 seconds</option> -->
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="last-7-days">Last 7 days</option>
+                        <option value="last-30-days">Last 30 days</option>
+                    </select>
+                </div>
+                <br>
+                <div style="overflow: auto;" class="col-12">
+                    <div id="instant-loader"></div>
+                    <div id="instant_table" class="d-none">
+                        <table class="table table-bordered table-hover center" width="100%" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td class="content-align-head">Total RAM :</td>
+                                    <td class="content-align-body"><span id="total_ram"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Used RAM :</td>
+                                    <td class="content-align-body"><span id="used_ram"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Free RAM :</td>
+                                    <td class="content-align-body"><span id="free_ram"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Total HDD :</td>
+                                    <td class="content-align-body"><span id="total_hdd"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Used HDD :</td>
+                                    <td class="content-align-body"><span id="used_hdd"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Free HDD :</td>
+                                    <td class="content-align-body"><span id="free_hdd"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">Usage/Drive :</td>
+                                    <td class="content-align-body"><span id="usage_drive"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="content-align-head">CPU Used :</td>
+                                    <td class="content-align-body"><span id="cpu_usage"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row overflow-hidden">
+                        <div id="ram-utilization" class="p-1 col-12 col-md-6">
+                            <div class="border p-2">
+                                <h4 class="mb-2">RAM</h4>
+                                <div class="embed-responsive embed-responsive-21by9">
+                                    <canvas id="ram-utilization-graph" class="embed-responsive-item"></canvas>
+                                </div>
+                                <div id="ram-utilization-details" class="row"></div>
+                            </div>
+                        </div>
+                        <div id="cpu-utilization" class="p-1 col-12 col-md-6">
+                            <div class="border p-2">
+                                <h4 class="mb-2">CPU</h4>
+                                <div class="embed-responsive embed-responsive-21by9">
+                                    <canvas id="cpu-utilization-graph" class="embed-responsive-item"></canvas>
+                                </div>
+                                <div id="cpu-utilization-details" class="row"></div>
+                            </div>
+                        </div>
+                        <div id="disk-utilization" class="p-1 col-12 col-md-6">
+                            <div class="border p-2">
+                                <h4 class="mb-2">DISK</h4>
+                                <div class="embed-responsive embed-responsive-21by9">
+                                    <canvas id="disk-utilization-graph" class="embed-responsive-item"></canvas>
+                                </div>
+                                <div id="disk-utilization-details" class="d-flex"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- </div>
 			<br>
 		</div>
 
 	</div> -->
 
-</article>
+    </article>
 
-<footer>
-	<div class="footer footer-bottom text-center "> 
-	    	<div class="col-md-12">
-				<span class="copy-text">Copyright © Crest IT Consulting Pvt. Ltd  2012 - <span id="year"></span>. All Rights Reserved</span>
-			</div>
-	</div>
-</footer>
+    <footer>
+        <div class="footer footer-bottom text-center ">
+            <div class="col-md-12">
+                <span class="copy-text">Copyright © Crest IT Consulting Pvt. Ltd 2012 - <span id="year"></span>. All
+                    Rights Reserved</span>
+            </div>
+        </div>
+    </footer>
 
 </body>
 <script>
-	const electron = require('electron');
-	const ipc = require('electron').ipcRenderer;
-	const {ipcRenderer} = electron;
-	const {BrowserWindow} = require('electron').remote;
-	const {remote} = require('electron');
-	const notifier = require('node-notifier'); // temp
-	const fs = require("fs"); // temp
-	const { spawn } = require('child_process'); // temp
-	const root_url = remote.getGlobal('root_url');
-	const sysKey = remote.getGlobal('sysKey');
+    const electron = require('electron');
+    const ipc = require('electron').ipcRenderer;
+    const { ipcRenderer } = electron;
+    const { BrowserWindow } = require('electron').remote;
+    const { remote } = require('electron');
+    const notifier = require('node-notifier'); // temp
+    const fs = require("fs"); // temp
+    const { spawn } = require('child_process'); // temp
+    const root_url = remote.getGlobal('root_url');
+    const sysKey = remote.getGlobal('sysKey');
 
-	const client_id = remote.getGlobal('clientID');
-	document.getElementById("year").innerHTML = new Date().getFullYear(); 
-	function activeTab(){
+    const client_id = remote.getGlobal('clientID');
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+    function checkActiveTab() {
+        var tabDefaultName = 'ticket';
 
-		var condition = navigator.onLine ? "ONLINE" : "OFFLINE"; 
-        if(condition == 'OFFLINE'){
-          document.getElementById('no_internet_one').innerText='No internet connection';
-          return false;
-        }else{
-          document.getElementById('no_internet_one').innerText='';
+        ipcRenderer.send('selectedTab');
+
+        ipcRenderer.on('selectedTab', (event, arg) => {
+            tabDefaultName = arg;
+        });
+
+        setTimeout(function () {
+            activeTab(tabDefaultName);
+        }, 100);
+    }
+
+    function activeTab() {
+
+        var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+        if (condition == 'OFFLINE') {
+            document.getElementById('no_internet_one').innerText = 'No internet connection';
+            return false;
+        } else {
+            document.getElementById('no_internet_one').innerText = '';
         }
 
-		document.getElementById('ticket').style.display = "block";
-		document.getElementById('onloadactive').className += " active";
-		const input_values = {
-		    tabName: 'ticket', 
-		    clientid : client_id
-		  };
-		ipcRenderer.send('tabData',input_values); 
+        document.getElementById('ticket').style.display = "block";
+        document.getElementById('onloadactive').className += " active";
+        const input_values = {
+            tabName: 'ticket',
+            clientid: client_id
+        };
+        ipcRenderer.send('tabData', input_values);
 
-		getUserName();
-	}
+        getUserName();
+    }
 
-	function getUserName(){
-		const input_values = {
-		    tabName: 'ticket', 
-		    clientid : client_id
-		  };
-		ipcRenderer.send('getUsername',input_values); 
-	}
+    function getUserName() {
+        const input_values = {
+            tabName: 'ticket',
+            clientid: client_id
+        };
+        ipcRenderer.send('getUsername', input_values);
+    }
 
-	function dateFilter(){
-		from_date = document.getElementById('from_date').value;
-		to_date = document.getElementById('to_date').value;
-		const input_values = {
-			tabName: 'usage', 
-		    clientid : client_id,
-		    from: from_date, 
-		    to : to_date
-		  };
-		ipcRenderer.send('tabData',input_values); 
-	}
+    function dateFilter() {
+        from_date = document.getElementById('from_date').value;
+        to_date = document.getElementById('to_date').value;
+        const input_values = {
+            tabName: 'usage',
+            clientid: client_id,
+            from: from_date,
+            to: to_date
+        };
+        ipcRenderer.send('tabData', input_values);
+    }
 
-	// ipcRenderer.on('returnUsername', (event, data) => {
-	// 	if(data['name'] != ''){
-	// 		document.getElementById('nav_username').innerHTML = data['name'];
-	// 	}else{
-	// 		document.getElementById('nav_username').innerHTML = 'UnKnown';
-	// 	}
-	// });
+    // ipcRenderer.on('returnUsername', (event, data) => {
+    // 	if(data['name'] != ''){
+    // 		document.getElementById('nav_username').innerHTML = data['name'];
+    // 	}else{
+    // 		document.getElementById('nav_username').innerHTML = 'UnKnown';
+    // 	}
+    // });
 
-	function openTab(evt, tabName) { 
-		// console.log(tabName);
+    function openTab(evt, tabName) {
+        // console.log(tabName);
 
-	   var condition = navigator.onLine ? "ONLINE" : "OFFLINE"; 
-        if(condition == 'OFFLINE'){
-          document.getElementById('no_internet_one').innerText='No internet connection';
-          return false;
-        }else{
-          document.getElementById('no_internet_one').innerText='';
+        var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+        if (condition == 'OFFLINE') {
+            document.getElementById('no_internet_one').innerText = 'No internet connection';
+            return false;
+        } else {
+            document.getElementById('no_internet_one').innerText = '';
         }
 
-	  var i, tabcontent, tablinks;
-	  var from_date,to_date;
-	  if(tabName == 'usage'){
-	  	from_date = document.getElementById('from_date').value;
-	  	to_date = document.getElementById('to_date').value;
-	  	document.getElementById('util-loader').style.display='block';
-	  }else if(tabName == 'ticket'){
-	  	from_date = '';
-	  	to_date = '';
-	  	document.getElementById('ticket_loader').style.display='block';
-	  }else if(tabName == 'asset'){
-	  	from_date = '';
-	  	to_date = '';
-	  	document.getElementById('asset-loader').style.display='block';
-	  }else if(tabName == 'user'){
-	  	from_date = '';
-	  	to_date = '';
-	  	document.getElementById('user-loader').style.display='block';
-	  }else if(tabName == 'quick_util'){
-	  	from_date = '';
-	  	to_date = '';
-	  	document.getElementById('instant-loader').style.display='block';
-	  	document.getElementById('instant_table').style.display='none';	  
-	  }else if(tabName == 'task'){
-		from_date = '';
-	  	to_date = '';
-		document.getElementById('task_loader').style.display='block';
-	  }else if(tabName == 'scripts'){
-		document.getElementById('script-loader').style.display='block';
-	  }else{
-	  	from_date = '';
-	  	to_date = '';
-	  }
-	  
-	  const input_values = {
-	    tabName: tabName, 
-	   // clientid : remote.getGlobal('clientID'),
-	    from: from_date,
-	    to: to_date
-	  };
-	  console.log(input_values);
-	  tabcontent = document.getElementsByClassName("tabcontent");
-	  for (i = 0; i < tabcontent.length; i++) {
-	    tabcontent[i].style.display = "none";
-	  }
-	  tablinks = document.getElementsByClassName("tablinks");
-	  for (i = 0; i < tablinks.length; i++) {
-	    tablinks[i].className = tablinks[i].className.replace(" active", "");
-	  }
-	  document.getElementById(tabName).style.display = "block";
-	  evt.currentTarget.className += " active";
+        var i, tabcontent, tablinks;
+        var from_date, to_date;
+        if (tabName == 'usage') {
+            from_date = document.getElementById('from_date').value;
+            to_date = document.getElementById('to_date').value;
+            document.getElementById('util-loader').style.display = 'block';
+        } else if (tabName == 'notification_policy') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('notification_loader').style.display = 'block';
+        } else if (tabName == 'ticket') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('ticket_loader').style.display = 'block';
+        } else if (tabName == 'asset') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('asset-loader').style.display = 'block';
+        } else if (tabName == 'user') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('user-loader').style.display = 'block';
+        } else if (tabName == 'quick_util') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('instant-loader').style.display = 'block';
+            document.getElementById('instant_table').style.display = 'none';
+        } else if (tabName == 'task') {
+            from_date = '';
+            to_date = '';
+            document.getElementById('task_loader').style.display = 'block';
+        } else if (tabName == 'scripts') {
+            document.getElementById('script-loader').style.display = 'block';
+        } else {
+            from_date = '';
+            to_date = '';
+        }
 
-	  ipcRenderer.send('tabData',input_values);
-	}
+        const input_values = {
+            tabName: tabName,
+            // clientid : remote.getGlobal('clientID'),
+            from: from_date,
+            to: to_date
+        };
+        console.log(input_values);
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
 
-	//Event Listener For Fetching Task Management Table Data Start
-	ipcRenderer.on('tabTaskReturn', (event, data) => { // IPC event listener
-		document.getElementById('task_loader').style.display='none';
-		var taskTab = document.getElementById('task_body');
-	   	taskTab.innerHTML = "";
-	   	const table = document.querySelector('table#task_table');
-		const tbody = document.querySelector('tbody#task_body');
-		if(data.length > 0){ 
-		  	for(let index = 0; index < data.length; index++){
-				// console.log(data);
-				  if(data[index][5] == 'recurring')
-				  {				  
-					const td = document.createElement('td');
-					const tr = document.createElement('tr');
-					const itemvalue = document.createTextNode(data[index][8]);
-					td.appendChild(itemvalue);
-					tr.appendChild(td);
-					tbody.appendChild(tr);
-				
-					const td1 = document.createElement('td');
-					const itemvalue1 = document.createTextNode(data[index][9]);
-					td1.appendChild(itemvalue1);
-					tr.appendChild(td1);
-					tbody.appendChild(tr);
+        ipcRenderer.send('tabData', input_values);
+    }
 
-					const td2 = document.createElement('td');
-					const itemvalue2 = document.createTextNode(data[index][11]);
-					td2.appendChild(itemvalue2);
-					tr.appendChild(td2);
-					tbody.appendChild(tr);
+    //Event Listener For Fetching Task Management Table Data Start
+    ipcRenderer.on('tabTaskReturn', (event, data) => { // IPC event listener
+        console.log('tabTaskReturn', data)
+        document.getElementById('task_loader').style.display = 'none';
+        var taskTab = document.getElementById('task_body');
+        taskTab.innerHTML = "";
+        const table = document.querySelector('table#task_table');
+        const tbody = document.querySelector('tbody#task_body');
+        if (data.length > 0) {
+            for (let index = 0; index < data.length; index++) {
+                // console.log(data);
+                if (data[index][5] == 'recurring') {
+                    const td = document.createElement('td');
+                    const tr = document.createElement('tr');
+                    const itemvalue = document.createTextNode(data[index][8]);
+                    td.appendChild(itemvalue);
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
 
-					const td3 = document.createElement('td');
-					const itemvalue3 = document.createTextNode(data[index][10]);
-					td3.appendChild(itemvalue3);
-					tr.appendChild(td3);
-					tbody.appendChild(tr);
+                    const td1 = document.createElement('td');
+                    const itemvalue1 = document.createTextNode(data[index][9]);
+                    td1.appendChild(itemvalue1);
+                    tr.appendChild(td1);
+                    tbody.appendChild(tr);
 
-					
-					const td4 = document.createElement('td');
-					const itemvalue4 = document.createTextNode(data[index][1]);
-					td4.appendChild(itemvalue4);
-					tr.appendChild(td4);
-					tbody.appendChild(tr);
-					
-					const td5 = document.createElement('td');
-					const itemvalue5 = document.createTextNode(data[index][3]);
-					td5.appendChild(itemvalue5);
-					tr.appendChild(td5);
-					tbody.appendChild(tr);
+                    const td2 = document.createElement('td');
+                    const itemvalue2 = document.createTextNode(data[index][11]);
+                    td2.appendChild(itemvalue2);
+                    tr.appendChild(td2);
+                    tbody.appendChild(tr);
 
-					const td6 = document.createElement('td');
-					const itemvalue6 = document.createTextNode(data[index][13]);
-					td6.appendChild(itemvalue6);
-					tr.appendChild(td6);
-					tbody.appendChild(tr);
-
-					
-					const td7 = document.createElement('td');
-					const itemvalue7 = document.createTextNode(data[index][14]);
-					td7.appendChild(itemvalue7);
-					tr.appendChild(td7);
-					tbody.appendChild(tr);
-
-					const td8 = document.createElement('td');
-					const itemvalue8 = document.createElement('input');
-					itemvalue8.type = "button";
-					itemvalue8.value = 'Edit Task';
-					itemvalue8.id = "update_status"
-					td8.appendChild(itemvalue8);
-					tr.appendChild(td8);
-					tbody.appendChild(tr);
-					itemvalue8.onclick = function () {
-						var task_id = (data[index][0]);
-						// console.log(task_id);
-						document.getElementById('exampleModal1').style.display='block';
-						document.getElementById('task_id').value = task_id;
-						};
-					
-			  		table.appendChild(tbody);
-				}
-				else
-				{
-					const td = document.createElement('td');
-					const tr = document.createElement('tr');
-					const itemvalue = document.createTextNode(data[index][6]);
-					td.appendChild(itemvalue);
-					tr.appendChild(td);
-					tbody.appendChild(tr);
-				
-					const td1 = document.createElement('td');
-					const itemvalue1 = document.createTextNode(data[index][7]);
-					td1.appendChild(itemvalue1);
-					tr.appendChild(td1);
-					tbody.appendChild(tr);
-
-					const td2 = document.createElement('td');
-					const itemvalue2 = document.createTextNode(data[index][11]);
-					td2.appendChild(itemvalue2);
-					tr.appendChild(td2);
-					tbody.appendChild(tr);
-
-					const td3 = document.createElement('td');
-					const itemvalue3 = document.createTextNode(data[index][10]);
-					td3.appendChild(itemvalue3);
-					tr.appendChild(td3);
-					tbody.appendChild(tr);
-
-					
-					const td4 = document.createElement('td');
-					const itemvalue4 = document.createTextNode(data[index][1]);
-					td4.appendChild(itemvalue4);
-					tr.appendChild(td4);
-					tbody.appendChild(tr);
-					
-					const td5 = document.createElement('td');
-					const itemvalue5 = document.createTextNode(data[index][3]);
-					td5.appendChild(itemvalue5);
-					tr.appendChild(td5);
-					tbody.appendChild(tr);
-
-					const td6 = document.createElement('td');
-					const itemvalue6 = document.createTextNode(data[index][13]);
-					td6.appendChild(itemvalue6);
-					tr.appendChild(td6);
-					tbody.appendChild(tr);
-
-					
-					const td7 = document.createElement('td');
-					const itemvalue7 = document.createTextNode(data[index][14]);
-					td7.appendChild(itemvalue7);
-					tr.appendChild(td7);
-					tbody.appendChild(tr);
-
-					
-					const td8 = document.createElement('td');
-					const itemvalue8 = document.createElement('input');
-					itemvalue8.type = "button";
-					itemvalue8.value = 'Edit Task';
-					td8.appendChild(itemvalue8);
-					tr.appendChild(td8);
-					tbody.appendChild(tr);
-					itemvalue8.onclick = function () {
-						var task_id = (data[index][0]);
-						// console.log(task_id);
-						document.getElementById('exampleModal1').style.display='block';
-						document.getElementById('task_id').value = task_id;
-						};
-					
-			  		table.appendChild(tbody);
-				}
-			}
-		}
-		else{
-		  	  const td = document.createElement('td');
-		  	  td.colSpan = "4";
-		  	  td.style.textAlign = "center";
-			  const tr = document.createElement('tr');
-			  const itemvalue = document.createTextNode('No Pending Tasks');
-			  td.appendChild(itemvalue);
-			  tr.appendChild(td);
-			  tbody.appendChild(tr);
-			  table.appendChild(tbody);
-		  }
-	});
-
-	ipcRenderer.on('tabTicketReturn', (event, data) => { // IPC event listener
-		document.getElementById('ticket_loader').style.display='none';
-		var ticTab = document.getElementById('ticket_body');
-	   	ticTab.innerHTML = "";
-	   	const table = document.querySelector('table');
-		const tbody = document.querySelector('tbody');
-		if(data.length > 0){ 
-		  	for(let index = 0; index < data.length; index++) {
-
-			  const td = document.createElement('td');
-			  const tr = document.createElement('tr');
-			  const itemvalue = document.createTextNode(data[index][0]);
-			  td.appendChild(itemvalue);
-			  tr.appendChild(td);
-			  tbody.appendChild(tr);
-			  
-			  const td1 = document.createElement('td');
-			  const itemvalue1 = document.createTextNode(data[index][1]);
-			  td1.appendChild(itemvalue1);
-			  tr.appendChild(td1);
-			  tbody.appendChild(tr);
-
-			  const td2 = document.createElement('td');
-			  const itemvalue2 = document.createTextNode(data[index][2]);
-			  td2.appendChild(itemvalue2);
-			  tr.appendChild(td2);
-			  tbody.appendChild(tr);
-
-			  const td3 = document.createElement('td');
-			  const itemvalue3 = document.createTextNode(data[index][3]);
-			  td3.appendChild(itemvalue3);
-			  tr.appendChild(td3);
-			  tbody.appendChild(tr);
-
-			  table.appendChild(tbody);
-            }   
-			
-		}
-		else{
-		  	  const td = document.createElement('td');
-		  	  td.colSpan = "4";
-		  	  td.style.textAlign = "center";
-			  const tr = document.createElement('tr');
-			  const itemvalue = document.createTextNode('No ticket raised');
-			  td.appendChild(itemvalue);
-			  tr.appendChild(td);
-			  tbody.appendChild(tr);
-			  table.appendChild(tbody);
-		  }
-	});
-
-	ipcRenderer.on('tabAssetReturn', (event, data) => { 
-		console.log(data);
-		document.getElementById('asset-loader').style.display='none';
-		if(data != ''){ 
-		    document.getElementById('asset_id').value = data[6];
-			//document.getElementById('client_Id').innerHTML = data[0];
-		    document.getElementById('sys_name').innerHTML = data[1];
-		    document.getElementById('sys_model').innerHTML = data[2];
-			document.getElementById('proc_name').innerHTML = data[4];
-		    document.getElementById('bios_name').innerHTML = data[5];
-		    document.getElementById('os_version').innerHTML = data[3];
-		    document.getElementById('asset_name').innerHTML = data[9];
-			document.getElementById('member_name').innerHTML = data[7];
-			if(data[10] === '' || data[10] === 'null')
-			{
-				document.getElementById('asset_email').innerHTML = 'NA';
-			}
-			else
-				document.getElementById('asset_email').innerHTML = data[10];
-			if(data[11] === '' || data[11] === 'null')
-			{
-				document.getElementById('asset_contact').innerHTML = 'NA';
-			}
-			else
-				document.getElementById('asset_contact').innerHTML = data[11];
-			document.getElementById('install_on').innerHTML = data[12];
-			//document.getElementById('company_name').innerHTML = data[8];
-			if(data[13] === '' || data[13] === 'null')
-			{
-				document.getElementById('asset_level1').innerHTML = 'NA';
-			}
-			else
-				document.getElementById('asset_level1').innerHTML = data[13];
-			
-			if(data[14] === '' || data[14] === 'null')
-			{
-				document.getElementById('asset_level2').innerHTML = 'NA';
-			}
-			else
-				document.getElementById('asset_level2').innerHTML = data[14];
-			
-			if(data[15] === '' || data[15] === 'null')
-			{
-				document.getElementById('asset_tag').innerHTML = 'NA';
-			}
-			else
-				document.getElementById('asset_tag').innerHTML = data[15];
+                    const td3 = document.createElement('td');
+                    const itemvalue3 = document.createTextNode(data[index][10]);
+                    td3.appendChild(itemvalue3);
+                    tr.appendChild(td3);
+                    tbody.appendChild(tr);
 
 
-		}
-	});
+                    const td4 = document.createElement('td');
+                    const itemvalue4 = document.createTextNode(data[index][1]);
+                    td4.appendChild(itemvalue4);
+                    tr.appendChild(td4);
+                    tbody.appendChild(tr);
 
-	ipcRenderer.on('tabUserReturn', (event, data) => 
-	{ 
-		document.getElementById('user-loader').style.display='none';
-		document.getElementById('loginId').innerHTML = data[0];
-	    document.getElementById('username').innerHTML = data[1];
-	    document.getElementById('cont_num').innerHTML = data[2];
-	    document.getElementById('emailId').innerHTML = data[3];
-	    document.getElementById('join_date').innerHTML = data[4];
-	});
+                    const td5 = document.createElement('td');
+                    const itemvalue5 = document.createTextNode(data[index][3]);
+                    td5.appendChild(itemvalue5);
+                    tr.appendChild(td5);
+                    tbody.appendChild(tr);
 
-	ipcRenderer.on('tabUtilsReturn', (event, data) => { 
-		document.getElementById('util-loader').style.display='none';
-		// var utilTab = document.getElementById('utils_body');
-		// const tbody =  document.getElementById('utils_body');
-		// utilTab.innerHTML = ""; 
-		from_date = document.getElementById('from_date').value;
-	  	to_date = document.getElementById('to_date').value;
-	  	
-		$( document ).ready(function() {
-			$('#utils_body').dataTable({
-				 "bProcessing": false,
-				 "bFilter": false,
-				 "bLengthChange": false,
-				 "order": [],
-			     "sAjaxSource": root_url + "/utilisation.php?func_name=CPUDetail&sysKey="+sysKey+"&from_date="+from_date+"&to_date="+to_date,
-			     "sServerMethod": "POST",
-			     "bDestroy": true,
-			     "language": {
-				    "zeroRecords": "No entries to show"
-				  },
-			      "aoColumnDefs": [
-	                   { "aTargets": [0], "sDefaultContent": ''},
-	                   { "aTargets": [1][0], "sDefaultContent": '',
-		                   "mRender": function (data, type, full) {
-		                       if (full[20] == "System off") {
-		                           return '<i title="'+full[20]+'" class="fa fa-times-circle" aria-hidden="true"></i>';
-		                       } else if(full[20] == "pending"){
-		                       	   return '<i title="'+full[20]+'" class="fa fa-hourglass-half"></i>';
-		                       } else if(full[20] == "not fetched"){
-		                       	   return '<i title="System off" class="fa fa-times-circle"></i>';
-		                       }
-		                       else {
-		                           return data;
-		                       }
-		                   } 
-		               }
-                    ]
-			}); 
-		});
-	});
+                    const td6 = document.createElement('td');
+                    const itemvalue6 = document.createTextNode(data[index][13]);
+                    td6.appendChild(itemvalue6);
+                    tr.appendChild(td6);
+                    tbody.appendChild(tr);
 
-	ipc.on('setInstantUtil', function (event,store) {
-	    document.getElementById('total_ram').innerHTML = store['total_ram']+' GB';
-	    document.getElementById('used_ram').innerHTML = store['used_ram']+' GB';
-	    document.getElementById('total_hdd').innerHTML = store['hdd_total']+' GB';
-	    document.getElementById('used_hdd').innerHTML = store['hdd_used']+' GB';
-	    document.getElementById('usage_drive').innerHTML = store['hdd_name'];
-	    document.getElementById('cpu_usage').innerHTML = store['cpu_usage']+' %';
-	    document.getElementById('instant-loader').style.display='none';
-	    document.getElementById('instant_table').style.display='block';
-		document.getElementById('free_ram').innerHTML = store['free_ram']+' GB';
-		document.getElementById('free_hdd').innerHTML = store['hdd_free']+' GB';
-	});
 
-	function Export(){ 
-		const downl_url = remote.getGlobal('downloadURL');
-		var from_date = document.getElementById('from_date').value;
-		var to_date = document.getElementById('to_date').value;
-		  
-		const input_values = {
-		    tabName: 'usage', 
-		   // clientid : client_id,
-		    from: from_date,
-		    to: to_date
-		  };
-		ipcRenderer.send("download",input_values);
-	}
+                    const td7 = document.createElement('td');
+                    const itemvalue7 = document.createTextNode(data[index][14]);
+                    td7.appendChild(itemvalue7);
+                    tr.appendChild(td7);
+                    tbody.appendChild(tr);
 
-	$(function() {
-		$('[data-toggle="tooltip"]').tooltip( );
+                    const td8 = document.createElement('td');
+                    const itemvalue8 = document.createElement('input');
+                    itemvalue8.type = "button";
+                    itemvalue8.value = 'Edit Task';
+                    itemvalue8.id = "update_status"
+                    td8.appendChild(itemvalue8);
+                    tr.appendChild(td8);
+                    tbody.appendChild(tr);
+                    itemvalue8.onclick = function () {
+                        var task_id = (data[index][0]);
+                        // console.log(task_id);
+                        document.getElementById('exampleModal1').style.display = 'block';
+                        document.getElementById('task_id').value = task_id;
+                    };
 
-        $( "#from_date" ).datepicker({
-		    dateFormat: 'dd/mm/yy',//check change
-		    changeMonth: true,
-		    changeYear: true
-		});
-        $( "#to_date" ).datepicker({
-		    dateFormat: 'dd/mm/yy',//check change
-		    changeMonth: true,
-		    changeYear: true
-		});
+                    table.appendChild(tbody);
+                }
+                else {
+                    const td = document.createElement('td');
+                    const tr = document.createElement('tr');
+                    const itemvalue = document.createTextNode(data[index][6]);
+                    td.appendChild(itemvalue);
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
+
+                    const td1 = document.createElement('td');
+                    const itemvalue1 = document.createTextNode(data[index][7]);
+                    td1.appendChild(itemvalue1);
+                    tr.appendChild(td1);
+                    tbody.appendChild(tr);
+
+                    const td2 = document.createElement('td');
+                    const itemvalue2 = document.createTextNode(data[index][11]);
+                    td2.appendChild(itemvalue2);
+                    tr.appendChild(td2);
+                    tbody.appendChild(tr);
+
+                    const td3 = document.createElement('td');
+                    const itemvalue3 = document.createTextNode(data[index][10]);
+                    td3.appendChild(itemvalue3);
+                    tr.appendChild(td3);
+                    tbody.appendChild(tr);
+
+
+                    const td4 = document.createElement('td');
+                    const itemvalue4 = document.createTextNode(data[index][1]);
+                    td4.appendChild(itemvalue4);
+                    tr.appendChild(td4);
+                    tbody.appendChild(tr);
+
+                    const td5 = document.createElement('td');
+                    const itemvalue5 = document.createTextNode(data[index][3]);
+                    td5.appendChild(itemvalue5);
+                    tr.appendChild(td5);
+                    tbody.appendChild(tr);
+
+                    const td6 = document.createElement('td');
+                    const itemvalue6 = document.createTextNode(data[index][13]);
+                    td6.appendChild(itemvalue6);
+                    tr.appendChild(td6);
+                    tbody.appendChild(tr);
+
+
+                    const td7 = document.createElement('td');
+                    const itemvalue7 = document.createTextNode(data[index][14]);
+                    td7.appendChild(itemvalue7);
+                    tr.appendChild(td7);
+                    tbody.appendChild(tr);
+
+
+                    const td8 = document.createElement('td');
+                    const itemvalue8 = document.createElement('input');
+                    itemvalue8.type = "button";
+                    itemvalue8.value = 'Edit Task';
+                    td8.appendChild(itemvalue8);
+                    tr.appendChild(td8);
+                    tbody.appendChild(tr);
+                    itemvalue8.onclick = function () {
+                        var task_id = (data[index][0]);
+                        // console.log(task_id);
+                        document.getElementById('exampleModal1').style.display = 'block';
+                        document.getElementById('task_id').value = task_id;
+                    };
+
+                    table.appendChild(tbody);
+                }
+            }
+        }
+        else {
+            const td = document.createElement('td');
+            td.colSpan = "4";
+            td.style.textAlign = "center";
+            const tr = document.createElement('tr');
+            const itemvalue = document.createTextNode('No Pending Tasks');
+            td.appendChild(itemvalue);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            table.appendChild(tbody);
+        }
+    });
+
+    ipcRenderer.on('tabNotificationPolicy', (event, data) => {
+        console.log(JSON.stringify(data));
+
+        // Hide the loader and display the table
+        document.getElementById('notification_loader').style.display = 'none';
+        var NotificationTab = document.getElementById('notification_body');
+        console.log(NotificationTab);
+
+        // Clear existing content in the table body
+        NotificationTab.innerHTML = "";
+
+        const table = document.querySelector('table#notification_table');
+        const tbody = document.querySelector('tbody#notification_body');
+
+        // Make sure data is an array
+        if (Array.isArray(data) && data.length > 0) {
+            let sr_no = 1;
+
+            // Loop through the data and create rows
+            data.forEach((item, index) => {
+                console.log(item);
+                const tr = document.createElement('tr');
+
+                // Serial Number
+                const td4 = document.createElement('td');
+                const itemvalue4 = document.createTextNode(sr_no);
+                td4.appendChild(itemvalue4);
+                tr.appendChild(td4);
+
+                // Title
+                const td = document.createElement('td');
+                const itemvalue = document.createTextNode(item.company_data['title']);
+                td.appendChild(itemvalue);
+                tr.appendChild(td);
+
+                // Created Date
+                const createdDate = item.company_data['created_on'];
+                const dateObject = new Date(createdDate);
+                const formattedDate = dateObject.toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric"
+                });
+                const td1 = document.createElement('td');
+                const itemvalue1 = document.createTextNode(formattedDate);
+                td1.appendChild(itemvalue1);
+                tr.appendChild(td1);
+
+                // Policy Status
+                const td2 = document.createElement('td');
+                const itemvalue2 = document.createTextNode(item.company_data['policy_status']);
+                td2.appendChild(itemvalue2);
+                tr.appendChild(td2);
+
+                // No of Months
+                const td3 = document.createElement('td');
+                const itemvalue3 = document.createTextNode(item['acceptance_status']);
+                td3.appendChild(itemvalue3);
+                tr.appendChild(td3);
+
+                if (item['acceptance_date'] && new Date(item['acceptance_date']).toString() != 'Invalid Date') {
+
+                    const acceptance_date = item['acceptance_date'];
+                    const acceptance_dateObject = new Date(acceptance_date);
+                    const acceptanceDate = acceptance_dateObject.toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                    });
+
+                    const td5 = document.createElement('td');
+                    const itemvalue5 = document.createTextNode(acceptanceDate);
+                    td5.appendChild(itemvalue5);
+                    tr.appendChild(td5);
+                }
+                else {
+                    const td5 = document.createElement('td');
+                    const itemvalue5 = document.createTextNode('-');
+                    td5.appendChild(itemvalue5);
+                    tr.appendChild(td5);
+                }
+
+                // Append row to tbody
+                tbody.appendChild(tr);
+                sr_no++; // Increment serial number
+            });
+
+            table.appendChild(tbody);
+        } else {
+            // If no data, display 'No Notification Available'
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = "5";  // Assuming 5 columns in the table
+            td.style.textAlign = "center";
+            const itemvalue = document.createTextNode('No Notification Available');
+            td.appendChild(itemvalue);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            table.appendChild(tbody);
+        }
+    });
+
+
+    ipcRenderer.on('tabTicketReturn', (event, data) => { // IPC event listener
+        console.log(data);
+        document.getElementById('ticket_loader').style.display = 'none';
+        var ticTab = document.getElementById('ticket_body');
+        ticTab.innerHTML = "";
+        const table = document.querySelector('table');
+        const tbody = document.querySelector('tbody');
+        if (data.length > 0) {
+            for (let index = 0; index < data.length; index++) {
+
+                const td = document.createElement('td');
+                const tr = document.createElement('tr');
+                const itemvalue = document.createTextNode(data[index][0]);
+                td.appendChild(itemvalue);
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+
+                const td1 = document.createElement('td');
+                const itemvalue1 = document.createTextNode(data[index][1]);
+                td1.appendChild(itemvalue1);
+                tr.appendChild(td1);
+                tbody.appendChild(tr);
+
+                const td2 = document.createElement('td');
+                const itemvalue2 = document.createTextNode(data[index][2]);
+                td2.appendChild(itemvalue2);
+                tr.appendChild(td2);
+                tbody.appendChild(tr);
+
+                const td3 = document.createElement('td');
+                const itemvalue3 = document.createTextNode(data[index][3]);
+                td3.appendChild(itemvalue3);
+                tr.appendChild(td3);
+                tbody.appendChild(tr);
+
+                table.appendChild(tbody);
+            }
+
+        }
+        else {
+            const td = document.createElement('td');
+            td.colSpan = "4";
+            td.style.textAlign = "center";
+            const tr = document.createElement('tr');
+            const itemvalue = document.createTextNode('No ticket raised');
+            td.appendChild(itemvalue);
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+            table.appendChild(tbody);
+        }
+    });
+
+    ipcRenderer.on('tabAssetReturn', (event, data) => {
+        console.log(data);
+        document.getElementById('asset-loader').style.display = 'none';
+        if (data != '') {
+
+            console.log({data})
+
+            document.getElementById('asset_id').value = data[6];
+            //document.getElementById('client_Id').innerHTML = data[0];
+            document.getElementById('sys_name').innerHTML = data[1];
+            document.getElementById('sys_model').innerHTML = data[2];
+            document.getElementById('proc_name').innerHTML = data[4];
+            document.getElementById('bios_name').innerHTML = data[5];
+            document.getElementById('os_version').innerHTML = data[3];
+            document.getElementById('asset_name').innerHTML = data[9];
+            document.getElementById('member_name').innerHTML = data[8];
+            if (data[10] === '' || data[10] === 'null') {
+                document.getElementById('asset_email').innerHTML = 'NA';
+            }
+            else
+                document.getElementById('asset_email').innerHTML = data[10];
+            if (data[11] === '' || data[11] === 'null') {
+                document.getElementById('asset_contact').innerHTML = 'NA';
+            }
+            else
+                document.getElementById('asset_contact').innerHTML = data[11];
+            document.getElementById('install_on').innerHTML = data[12];
+            //document.getElementById('company_name').innerHTML = data[8];
+            if (data[13] === '' || data[13] === 'null') {
+                document.getElementById('asset_level1').innerHTML = 'NA';
+            }
+            else
+                document.getElementById('asset_level1').innerHTML = data[13];
+
+            if (data[14] === '' || data[14] === 'null') {
+                document.getElementById('asset_level2').innerHTML = 'NA';
+            }
+            else
+                document.getElementById('asset_level2').innerHTML = data[14];
+
+            if (data[15] === '' || data[15] === 'null') {
+                document.getElementById('asset_tag').innerHTML = 'NA';
+            }
+            else
+                document.getElementById('asset_tag').innerHTML = data[15];
+
+
+        }
+    });
+
+    ipcRenderer.on('tabUserReturn', (event, data) => {
+        document.getElementById('user-loader').style.display = 'none';
+        document.getElementById('loginId').innerHTML = data[0];
+        document.getElementById('username').innerHTML = data[1];
+        document.getElementById('cont_num').innerHTML = data[2];
+        document.getElementById('emailId').innerHTML = data[3];
+        document.getElementById('join_date').innerHTML = data[4];
+    });
+
+    ipcRenderer.on('tabUtilsReturn', (event, data) => {
+        document.getElementById('util-loader').style.display = 'none';
+        // var utilTab = document.getElementById('utils_body');
+        // const tbody =  document.getElementById('utils_body');
+        // utilTab.innerHTML = ""; 
+        from_date = document.getElementById('from_date').value;
+        to_date = document.getElementById('to_date').value;
+
+        $(document).ready(function () {
+            $('#utils_body').dataTable({
+                "bProcessing": false,
+                "bFilter": false,
+                "bLengthChange": false,
+                "order": [],
+                "sAjaxSource": root_url + "/utilisation.php?func_name=CPUDetail&sysKey=" + sysKey + "&from_date=" + from_date + "&to_date=" + to_date,
+                "sServerMethod": "POST",
+                "bDestroy": true,
+                "language": {
+                    "zeroRecords": "No entries to show"
+                },
+                "aoColumnDefs": [
+                    { "aTargets": [0], "sDefaultContent": '' },
+                    {
+                        "aTargets": [1][0], "sDefaultContent": '',
+                        "mRender": function (data, type, full) {
+                            if (full[20] == "System off") {
+                                return '<i title="' + full[20] + '" class="fa fa-times-circle" aria-hidden="true"></i>';
+                            } else if (full[20] == "pending") {
+                                return '<i title="' + full[20] + '" class="fa fa-hourglass-half"></i>';
+                            } else if (full[20] == "not fetched") {
+                                return '<i title="System off" class="fa fa-times-circle"></i>';
+                            }
+                            else {
+                                return data;
+                            }
+                        }
+                    }
+                ]
+            });
+        });
+    });
+
+    ipc.on('setInstantUtil', function (event, store) {
+        document.getElementById('total_ram').innerHTML = store['total_ram'] + ' GB';
+        document.getElementById('used_ram').innerHTML = store['used_ram'] + ' GB';
+        document.getElementById('total_hdd').innerHTML = store['hdd_total'] + ' GB';
+        document.getElementById('used_hdd').innerHTML = store['hdd_used'] + ' GB';
+        document.getElementById('usage_drive').innerHTML = store['hdd_name'];
+        document.getElementById('cpu_usage').innerHTML = store['cpu_usage'] + ' %';
+        document.getElementById('instant-loader').style.display = 'none';
+        document.getElementById('instant_table').style.display = 'block';
+        document.getElementById('free_ram').innerHTML = store['free_ram'] + ' GB';
+        document.getElementById('free_hdd').innerHTML = store['hdd_free'] + ' GB';
+    });
+
+    function Export() {
+        const downl_url = remote.getGlobal('downloadURL');
+        var from_date = document.getElementById('from_date').value;
+        var to_date = document.getElementById('to_date').value;
+
+        const input_values = {
+            tabName: 'usage',
+            // clientid : client_id,
+            from: from_date,
+            to: to_date
+        };
+        ipcRenderer.send("download", input_values);
+    }
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $("#from_date").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true
+        });
+        $("#to_date").datepicker({
+            dateFormat: 'dd/mm/yy',//check change
+            changeMonth: true,
+            changeYear: true
+        });
 
         $('#to_date').datepicker('setDate', new Date('yy-mm-dd'));
 
-        var date = $('#to_date').datepicker('getDate', '+1d'); 
-        date.setDate(date.getDate()-7); 
-	    $('#from_date').datepicker('setDate', date);
+        var date = $('#to_date').datepicker('getDate', '+1d');
+        date.setDate(date.getDate() - 7);
+        $('#from_date').datepicker('setDate', date);
 
-	});
+    });
+
+    /*********************************************/
+    /************ UTILIZATION GRAPH **************/
+    /*********************************************/
+
+    function convertBytes(bytes, format) {
+        const formats = {
+            'b': 1,
+            'kb': 1024,
+            'mb': 1024 ** 2,
+            'gb': 1024 ** 3,
+            'tb': 1024 ** 4,
+        };
+
+        if (!formats[format]) {
+            throw new Error(`Invalid format: ${format}`);
+        }
+
+        const value = Math.fround(bytes / formats[format]).toFixed(2);
+        // return `${value.toFixed(2)} ${format}`.toUpperCase();
+        return `${value} ${format}`.toUpperCase();
+    }
+
+    function getLineGraphConfig(data = [], x_axis_labels = [], y_axis_labels = [], label = "unknown") {
+        return {
+            type: 'line',
+            data: {
+                // labels: Array(60).fill(''),
+                labels: [],
+                // labels: y_axis_labels,
+                // labels: y_axis_labels,
+                datasets: [{
+                    label,
+                    // data: Array(60).fill(0),
+                    data: data,
+                    // data: [],
+                    fill: 'start',
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.05)',
+                    borderWidth: 0.5,
+                    tension: 0,
+                    pointRadius: 0,
+                    pointHoverRadius: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        min: 0,
+                        // max: x_axis_labels.length,
+                        // max: 60,
+                        grid: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            display: true,
+                            // stepSize: 1
+                        },
+                        border: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date/Time'
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        // max: y_axis_labels.length,
+                        max: 100,
+                        grid: {
+                            display: true,
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            lineWidth: 1
+                        },
+                        ticks: {
+                            display: true,
+                            callback(value) {
+                                return `${value}%`
+                            }
+                            // stepSize: 1
+                        },
+                        border: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Usage in percent'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'index',
+                        intersect: false,
+                        callback: {
+                            label(ctx) {
+                                return `${ctx.dataset.label} ${ctx.parsed.y}%`
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let pointsInXaxisGraph = 60 // 60 - seconds, 288 - today/yesterday, 2016 - 7 days
+    let timers = {}
+
+    const RAM_GRAPH = new Chart(
+        document.getElementById('ram-utilization-graph').getContext('2d'),
+        getLineGraphConfig([], (new Array(60)).fill(''), (new Array(60)).fill(''), "ram usage")
+        // getLineGraphConfig()
+        // [], (new Array(60)).fill(''), (new Array(60)).fill('')
+    );
+
+    const CPU_GRAPH = new Chart(
+        document.getElementById('cpu-utilization-graph').getContext('2d'),
+        getLineGraphConfig([], (new Array(60)).fill(''), (new Array(60)).fill(''), 'cpu usage')
+    );
+
+    const DISK_GRAPH = new Chart(
+        document.getElementById('disk-utilization-graph').getContext('2d'),
+        getLineGraphConfig([], (new Array(60)).fill(''), (new Array(60)).fill(''), 'disk usage')
+    );
+
+    function updateLineGraphConfig({ graph, data, x_axis_labels, y_axis_labels }) {
+        graph.data.labels = y_axis_labels
+        graph.data.datasets[0].data = data
+        // graph.options.scales.x.max = x_axis_labels.length
+        // graph.options.scales.y.max = y_axis_labels.length
+
+    }
+
+    async function getInstantUtilization() {
 
 
+        /********************************************/
+        /******************* RAM ********************/
+        /********************************************/
+        async function updateRamGraph(graph) {
+            const data = graph.data.datasets[0].data;
+            const { used, total } = await ipcRenderer.invoke("get-ram-usage")
+            data.push(Math.floor((used / total) * 100).toFixed(2));
+            if (data.length > pointsInXaxisGraph) {
+                data.shift()
+            }
+
+            // console.log('ram grph', data)
+            graph.update('none');
+        }
+
+        updateRamGraph(RAM_GRAPH)
+        timers['ram-graph'] = setInterval(() => updateRamGraph(RAM_GRAPH), 1000);
+
+
+        async function updateRamDetails() {
+            const details = await ipcRenderer.invoke("get-ram-details")
+            const ramUsage = await ipcRenderer.invoke("get-ram-usage")
+
+            document.getElementById("ram-utilization-details").innerHTML = ""
+            for (let detail of details) {
+                const div = document.createElement("div")
+                div.classList.add('col-md-4', 'col-12', 'd-flex', 'flex-column')
+                for (let key in detail) {
+                    const span = document.createElement("span")
+                    span.innerHTML = `
+					<span>
+						<small>${key}:</small>&nbsp;
+						<small>${detail[key]}</small>
+					</span>
+					`;
+                    div.append(span)
+                }
+                document.getElementById("ram-utilization-details").append(div)
+            }
+
+            const div = document.createElement("div")
+            div.classList.add('col-md-4', 'col-12', 'd-flex', 'flex-column')
+            div.innerHTML = `
+			<span>
+				<small>Total ram:</small>&nbsp;
+				<small>${convertBytes(ramUsage.total, "gb").toUpperCase()}</small>
+			</span>
+			<span>
+				<small>Available ram:</small>&nbsp;
+				<small>${convertBytes(ramUsage.free, "gb").toUpperCase()}</small>
+			</span>
+			<span>
+				<small>Used ram:</small>&nbsp;
+				<small>${convertBytes(ramUsage.used, "gb").toUpperCase()}</small>
+			</span>
+			`
+            document.getElementById("ram-utilization-details").append(div)
+        }
+        updateRamDetails()
+        // timers['ram-details'] = setInterval(updateRamDetails, 1000 * 5);
+
+
+        /********************************************/
+        /******************* CPU ********************/
+        /********************************************/
+        async function updateCpuGraph(graph) {
+            const data = graph.data.datasets[0].data;
+            const cpuUsage = await ipcRenderer.invoke("get-cpu-usage")
+            data.push(Math.floor(cpuUsage.currentLoad).toFixed(2));
+            if (data.length > pointsInXaxisGraph) {
+                data.shift();
+            }
+
+            graph.update('none');
+        }
+
+        updateCpuDetails(CPU_GRAPH)
+        timers['cpu-graph'] = setInterval(() => updateCpuGraph(CPU_GRAPH), 1000);
+
+
+        async function updateCpuDetails() {
+            const details = await ipcRenderer.invoke("get-cpu-details")
+
+            document.getElementById("cpu-utilization-details").innerHTML = ""
+            for (let detail of details) {
+                const div = document.createElement("div")
+                div.classList.add('col-md-6', 'col-12', 'd-flex', 'flex-column')
+                for (let key in detail) {
+                    const span = document.createElement("span")
+                    span.innerHTML = `
+					<span>
+						<small>${key}:</small>&nbsp;
+						<small>${detail[key]}</small>
+					</span>
+					`;
+                    div.append(span)
+                }
+                document.getElementById("cpu-utilization-details").append(div)
+            }
+        }
+        updateCpuDetails()
+        // timers['cpu-details'] = setInterval(updateCpuDetails, 1000 * 5);
+
+
+        /********************************************/
+        /****************** DISK ********************/
+        /********************************************/
+
+        async function updateDiskGraph(graph) {
+            const data = graph.data.datasets[0].data;
+
+            const cpuUsage = await ipcRenderer.invoke("get-disk-usage")
+            data.push(Math.floor((cpuUsage.used / cpuUsage.total) * 100).toFixed(2));
+            if (data.length > pointsInXaxisGraph) {
+                data.shift();
+            }
+
+            // const labels = graph.data.labels
+            // // labels.push("")
+            // labels.push(cpuUsage.free)
+            // if (labels.length > pointsInXaxisGraph) {
+            // 	labels.shift()
+            // }
+
+            graph.update('none');
+        }
+
+        updateDiskGraph(DISK_GRAPH)
+        timers['disk-graph'] = setInterval(() => updateDiskGraph(DISK_GRAPH), 1000);
+
+
+        async function updateDiskDetails() {
+            const details = await ipcRenderer.invoke("get-disk-details")
+
+            document.getElementById("disk-utilization-details").innerHTML = ""
+
+            for (let detail of details) {
+                const div = document.createElement("div")
+                // div.classList.add('col-md-6', 'col-12', 'd-flex', 'flex-column')
+                div.classList.add('flex-grow-1', 'd-flex', 'flex-column')
+                for (let key in detail) {
+                    const span = document.createElement("span")
+                    span.innerHTML = `
+					<span>
+						<small>${key}:</small>&nbsp;
+						<small>${detail[key]}</small>
+					</span>
+					`;
+                    div.append(span)
+                }
+                document.getElementById("disk-utilization-details").append(div)
+            }
+        }
+        updateDiskDetails()
+        // timers['disk-details'] = setInterval(updateDiskDetails, 1000 * 5);
+    }
+    getInstantUtilization()
+
+    /*********************************************/
+    /************** GRAPH DATE FILTER ************/
+    /*********************************************/
+
+    async function setGraphDataOnce(data, type) {
+
+        Object.values(timers).forEach(id => clearInterval(id))
+        console.log('all timers clear')
+
+        function setGraphDataAndLabels(graph, data, labels, stepSize = 1) {
+            graph.data.datasets[0].data = data
+            // RAM_GRAPH.data.options.scales.x.max = 60
+            graph.data.labels = labels;
+            graph.options.scales.x.ticks.stepSize = stepSize
+
+            graph.update()
+        }
+
+        function formatTimeGraphLabel(dateString) {
+            let formatString = 'hh:mm a'
+            if (type == 'today' || type == 'yesterday') {
+                formatString = 'hh:mm a'
+            } else {
+                formatString = 'DD MMM YY'
+            }
+            return moment(new Date(dateString)).format(formatString)
+        }
+
+        let ram_graph_data = []
+        let ram_graph_labels = []
+        let cpu_graph_data = []
+        let cpu_graph_labels = []
+        let disk_graph_data = []
+        let disk_graph_labels = []
+        let graph_step_size = 1
+
+        if (type == 'last-60-seconds') {
+            const { ram, cpu, disk } = data
+            const graph_labels = Array.from({ length: 60 }, (_, i) => i)
+            // const { ram, cpu, disk } = await ipcRenderer.invoke('get-last-60-sec-instant-utilization-data')
+
+            ram.forEach(({ used, total }) => {
+                ram_graph_data.push(Math.floor((used / total) * 100).toFixed(2))
+            })
+            setGraphDataAndLabels(RAM_GRAPH, ram_graph_data, graph_labels)
+            // RAM_GRAPH.data.datasets[0].data = ram_graph_data
+            // // RAM_GRAPH.data.options.scales.x.max = 60
+            // RAM_GRAPH.data.labels = Array.from({ length: 60 }, (_, i) => i);
+
+
+            cpu.forEach((val) => {
+                cpu_graph_data.push(val.toFixed(2))
+            })
+            setGraphDataAndLabels(CPU_GRAPH, cpu_graph_data, graph_labels)
+            // CPU_GRAPH.data.datasets[0].data = cpu_graph_data
+            // // CPU_GRAPH.data.options.scales.x.max = 60
+            // CPU_GRAPH.data.labels = Array.from({ length: 60 }, (_, i) => i);
+
+
+            disk.forEach(({ used, total }) => {
+                disk_graph_data.push(Math.floor((used / total) * 100).toFixed(2))
+            })
+            setGraphDataAndLabels(DISK_GRAPH, disk_graph_data, graph_labels)
+            // DISK_GRAPH.data.datasets[0].data = disk_graph_data
+            // // DISK_GRAPH.data.options.scales.x.max = 60
+            // DISK_GRAPH.data.labels = Array.from({ length: 60 }, (_, i) => i);
+
+            setTimeout(getInstantUtilization, 1000);
+            return
+        }
+
+
+        let graph_step_size_divider = 1
+        // if (type == 'today' || type == 'yesterday') {
+        // 	graph_step_size_divider = 60
+        // } else {
+        // 	graph_step_size_divider = 100
+        // }
+
+        for (let date in data) {
+            const { used, total } = data[date].ram
+            ram_graph_labels.push(formatTimeGraphLabel(date))
+            // ram_graph_labels.push(new Date(date))
+            ram_graph_data.push(Math.floor((used / total) * 100).toFixed(2))
+        }
+        graph_step_size = Math.floor(ram_graph_labels / graph_step_size_divider)
+        setGraphDataAndLabels(RAM_GRAPH, ram_graph_data, ram_graph_labels, graph_step_size)
+
+        for (let date in data) {
+            cpu_graph_labels.push(formatTimeGraphLabel(date))
+            // cpu_graph_labels.push(new Date(date))
+            cpu_graph_data.push(data[date].cpu.currentLoad.toFixed(2))
+        }
+        graph_step_size = Math.floor(cpu_graph_labels / graph_step_size_divider)
+        setGraphDataAndLabels(CPU_GRAPH, cpu_graph_data, cpu_graph_labels, graph_step_size)
+
+        for (let date in data) {
+            const { used, total } = data[date].disk
+            disk_graph_labels.push(formatTimeGraphLabel(date))
+            // disk_graph_labels.push(new Date(date))
+            disk_graph_data.push(Math.floor((used / total) * 100).toFixed(2))
+        }
+        graph_step_size = Math.floor(disk_graph_labels / graph_step_size_divider)
+        setGraphDataAndLabels(DISK_GRAPH, disk_graph_data, disk_graph_labels, graph_step_size)
+        return
+    }
+
+    $("#quick_util #select-date-option").on("change", function (event) {
+        const value = event.target.value
+        console.log('select date option', value)
+
+        ipcRenderer.invoke("get-instant-utilization-data-by-date-filter", value)
+            .then(function (data) {
+                setGraphDataOnce(data, value)
+                // console.log("last", JSON.stringify(data))
+            })
+    })
+
+    const INITIAL_GRAPH_FILTER_VAL = $('#select-date-option').val()
+    ipcRenderer.invoke("get-instant-utilization-data-by-date-filter", INITIAL_GRAPH_FILTER_VAL)
+        .then(function (data) {
+            setGraphDataOnce(data, INITIAL_GRAPH_FILTER_VAL)
+            // setGraphDataOnce(data, 'last-60-seconds')
+        })
+
+    
+    // openTab(_, 'notification_policy')
+    document.getElementById('onloadactive').click()
 </script>
+
 </html>

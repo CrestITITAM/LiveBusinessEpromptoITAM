@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="../images/icons/favicon.ico" />
+    <!--===============================================================================================-->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="./lib/bootstrap-4.0.0.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <!-- <link rel="stylesheet" type="text/css" href="../css/util.css"> -->
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="../css/are_you_member.css">
+    <!--===============================================================================================-->
+    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!--===============================================================================================-->
+</head>
+<style>
+    .form-group {
+        margin-bottom: 2px !important;
+    }
+
+    select.form-control {
+        padding: 0.375rem !important;
+    }
+
+    /* SELECT DROPDOWN + SEARCH */
+    .select2 {
+        padding: 3px;
+        margin-bottom: 8px;
+        margin-top: 2px;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #000864;
+        width: 100%;
+    }
+
+    .select2-container--default .select2-selection--single {
+        background-color: transparent;
+        border: none;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-style: none;
+    }
+
+    .select2-selection__arrow:before {
+        position: absolute;
+        transform: translate(50%, 50%);
+        content: "\f078";
+        /* Font Awesome chevron down icon */
+        font-family: "Font Awesome 5 Free";
+        /* Ensure the correct font family */
+        font-weight: 900;
+        font-size: 0.65rem;
+        color: #000864;
+    }
+
+    .error-text {
+        color: red;
+    }
+
+    #loader {
+        min-width: 32px;
+        min-height: 32px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url('../images/download.gif');
+    }
+
+    .bg-warn {
+        background: #fffdf6;
+    }
+</style>
+
+<body>
+    <div class="col-md-12 col-xs-12"><br>
+        <!-- <h3><center>Add / Allocate User</center></h3> -->
+        <div class="col-md-2 col-xs-12"></div>
+        <div class="col-md-8 col-xs-12">
+            <p id="error_message" style="text-align: center; color:red; font-weight: bold;"></p>
+            <div id="dynamic-content">
+                <!-- MULTI-STEP LOGIN FORM -->
+                <!-- <form class="" id="login_form" name="login_form"> -->
+                <form id="login-form">
+
+                    <!-- hidden inputs -->
+                    <input type="hidden" name="client_no" id="client_no">
+                    <input type="hidden" name="token" id="token">
+                    <input type="hidden" name="sys_key" id="sys_key">
+                    <input type="hidden" name="parent_id" id="parent_id">
+
+                    <!-- verify member email -->
+                    <div id="verify-member-email" class="">
+
+                        <!-- <div class="fontusercontact"> -->
+                        <input type="email" name="member_email_id" id="member_email_id"
+                            placeholder="Enter Member Email Id">
+                        <!-- </div> -->
+                        <span class="error-text" id="err_member_email_id"></span>
+                        <!-- <button type="button" class="btn member login100-form-btn btn-css" id="btn_validate" onclick="validate()">
+                            VALIDATE
+                        </button> -->
+                        <!-- <button type="submit" class="btn member login100-form-btn btn-css" id="btn_validate" onclick="validate()">VALIDATE</button> -->
+                    </div>
+
+                    <!-- ALERT: asset found in different member -->
+                    <div id="different-member-alert" class="bg-warn border border-warning rounded p-1 d-none">
+                        <p class="d-flex align-items-center font-weight-bold text-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                            <span class="ml-2">Asset found in different member</span>
+                        </p>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore omnis deserunt possimus
+                            voluptatibus sequi, ipsum nesciunt rerum iusto aut exercitationem sint doloribus molestias
+                            quibusdam vel eaque soluta repellat laboriosam sed!
+                        </p>
+                    </div>
+
+                    <!-- ALERT: asset is in stock (under same member) -->
+                    <div id="in-stock-alert" class="bg-warn border border-warning rounded p-1 d-none">
+                        <p class="d-flex align-items-center font-weight-bold text-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                            <span class="ml-2">Asset found in stock</span>
+                        </p>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore omnis deserunt possimus
+                            voluptatibus sequi, ipsum nesciunt rerum iusto aut exercitationem sint doloribus molestias
+                            quibusdam vel eaque soluta repellat laboriosam sed!
+                        </p>
+                    </div>
+
+                    <!-- ALERT: asset is not in stock (under same member) -->
+                    <div id="existing-alert" class="bg-warn border border-warning rounded p-1 d-none">
+                        <p class="d-flex align-items-center font-weight-bold text-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                            <span class="ml-2">Asset is already assigned</span>
+                        </p>
+                        <p>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore omnis deserunt possimus
+                            voluptatibus sequi, ipsum nesciunt rerum iusto aut exercitationem sint doloribus molestias
+                            quibusdam vel eaque soluta repellat laboriosam sed!
+                        </p>
+                    </div>
+
+                    <!-- EXISTING USER / NEW-FIRST LOGIN -->
+                    <div id="select-user" class="d-none">
+                        <!-- <div class="form-group" id="device_name"> -->
+                        <select class="form-control" id="device_type">
+                            <!-- <select class="input100" id="device_type"> -->
+                            <option value="" selected disabled>Device Type</option>
+                        </select>
+                        <!-- </div> -->
+                        <select id="user_type" class="input100" onchange="checkNewUser(this.value);">
+                            <option value="" selected disabled>Select Category</option>
+                            <!-- DO NOT DELETE BELOW COMMENT -->
+                            <!-- <option value="new">Create New User</option> -->
+                            <option value="in_stock">In Stock</option>
+                            <option value="">Existing User</option>
+                        </select>
+                        <!-- <div id="existing_user" style="display: none;"> -->
+                        <select id="users-list" class="select2 select2-hidden-accessible form-control"
+                            style="width: 100%;" tabindex="-1" aria-hidden="true">
+                            <!-- <option value="" selected disabled>Allocated User</option> -->
+                        </select>
+                        <!-- </div> -->
+                    </div>
+
+                    <!-- <div class="" id="allocate_user" style="display: none;">
+                    <select class="input100" id="alloc_users">
+                      <option value="" selected disabled>Select User</option>
+                      <option value="new">Create New User</option>
+                      <option value="existing_user">Existing User</option>
+                      <option value="in_stock">In Stock</option>
+                    </select>
+                    </div> -->
+
+                    <div id="loader" class="d-none"></div>
+
+                    <div id="form_btns">
+                        <!-- BUTTON: verify member email -->
+                        <button type="button" class="btn btn-css" id="btn-verify-member-email">
+                            VALIDATE
+                        </button>
+
+                        <!-- BUTTON: asset found in different member -->
+                        <button type="button" class="btn btn-css d-none" id="btn-back-to-login">
+                            BACK TO LOGIN
+                        </button>
+
+                        <!-- BUTTON: asset is in stock (under same member) -->
+                        <button type="button" class="btn btn-css d-none" id="btn-proceed-with-in-stock">
+                            PROCCED WITH IN-STOCK
+                        </button>
+
+                        <button type="button" class="btn btn-css d-none" id="btn-select-user">
+                            SELECT USER
+                        </button>
+
+                        <!-- BUTTON: asset is not in stock (under same member) -->
+                        <button type="button" class="btn btn-css d-none" id="btn-already-user-assigned-login">
+                            LOGIN
+                        </button>
+
+                        <!-- BUTTON: NEW/FIRST LOGIN -->
+                        <button type="button" class="btn btn-css d-none" id="btn-first-login">
+                            LOGIN
+                        </button>
+
+                        <!-- BUTTON: back to previous form-stage -->
+                        <button type="button" class="btn btn-css" id="btn-back-to-previous-stage">
+                            BACK
+                        </button>
+
+                    </div>
+
+
+                    <!-- <div class="" id="allocate_user" style="display: none;">
+                        <div class="form-group" id="device_name">
+                            <select class="form-control" id="device_type">
+                                <option value="" selected disabled>Device Type</option>
+                            </select>
+                        </div>
+                        <select class="input100" onchange="checkNewUser(this.value);" id="user_type">
+                            <option value="" selected disabled>Select Category</option> -->
+                    <!-- DO NOT DELETE BELOW COMMENT -->
+                    <!-- <option value="new">Create New User</option> -->
+                    <!-- <option value="in_stock">In Stock</option>
+                            <option value="">Existing User</option>
+                        </select>
+                        <div id="existing_user" style="display: none;">
+                            <select id="alloc_users" class="form-control select2 select2-hidden-accessible"
+                                style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                <option value="" selected disabled>Allocated User</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+                    <!-- <div id="new_user_form" style="display: none;">
+
+                        <div id="static-fields" class="form-group">
+
+                        </div>
+
+
+                        <div id="additional-fields" style="display: none;">
+
+                        </div>
+                        <div class="" id="allocate_level1">
+                            <select class="input100" id="alloc_level1" onchange="getSelectedValueLevel1(this)">
+                                <option value="" selected disabled>Select Level</option>
+                            </select>
+                        </div>
+                        <span class="" id="err_level2" style="color: #a6a6a6;font-size: 15px;font-style: italic;"></span>
+                        <div class="" id="allocate_level2">
+                            <select class="input100" id="alloc_level2" onchange="getSelectedValueLevel2(this)">
+                                <option value="" selected disabled>Next Level</option>
+                            </select>
+                        </div>
+                        <span class="" id="err_level3" style="color: #a6a6a6;font-size: 15px;font-style: italic;"></span>
+                        <div class="" id="allocate_level3">
+                            <select class="input100" id="alloc_level3">
+                                <option value="" selected disabled>Next Level</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="after_validate" style="display: none;">
+                        <div id="all-loader"></div>
+                    </div> -->
+
+
+
+                    <!-- <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn new login100-form-btn btn-css" type="submit" id="submitBtn"
+                                style="display: none !important;">SUBMIT</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn new login100-form-btn btn-css" id="backBtn"
+                                style="display: none;" onclick="back()">
+                                BACK
+                            </button>
+                        </div>
+                    </div> -->
+
+
+                    <!-- </div> -->
+
+                </form>
+            </div>
+        </div>
+        <!-- <div class="col-md-4 col-xs-12"></div> -->
+    </div>
+</body>
+<!--===============================================================================================-->
+<!-- <script src="vendor/jquery/jquery-3.2.1.min.js"></script> -->
+<!--===============================================================================================-->
+<!-- <script src="vendor/bootstrap/js/bootstrap.min.js"></script> -->
+<!--===============================================================================================-->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<!--===============================================================================================-->
+<script src="../js/main.js"></script>
+<!--===============================================================================================-->
+<!-- <script>window.$ = window.jQuery = require('jquery');</script> -->
+<!--===============================================================================================-->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script> -->
+<!--===============================================================================================-->
+<script>
+    // function back() {
+    //     window.location.href = '../are_you_member.html'
+    // }
+
+    //
+    const FORM_STAGES = Object.freeze({
+        VARIFY_MEMBER_EMAIL: 'VARIFY_MEMBER_EMAIL',
+        ASSET_FOUND_IN_DIFFERENT_MEMBER: 'ASSET_FOUND_IN_DIFFERENT_MEMBER',
+        ASSET_FOUND_IN_STOCK: 'ASSET_FOUND_IN_STOCK',
+        ASSET_IS_NOT_IN_STOCK: 'ASSET_IS_NOT_IN_STOCK',
+        SELECT_USER: 'SELECT_USER',
+        NEW_FIRST_LOGIN: 'NEW_FIRST_LOGIN',
+    })
+    let formStageHistory = []
+    function backToPreviousFormStage() {
+
+    }
+    
+    function handleEnterButtonPress(e){
+        e.preventDefault()
+
+        if(e.key == 'Enter'){
+            return
+        }
+        
+        console.log('hii')
+
+        switch (formStageHistory) {
+            case FORM_STAGES.VARIFY_MEMBER_EMAIL:
+                
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    $('#login-form').submit(handleEnterButtonPress)
+    $('#login-form').on("keypress",handleEnterButtonPress)
+
+    // function loadDeviceType(isCloudUser) {
+    //     const select = document.getElementById("device_type");
+    //     document.getElementById("device_type").options.length = 0;
+
+    //     let options = [];
+
+    //     options[0] = { name: "Laptop", value: 4 };
+    //     options[1] = { name: "Desktop", value: 6 };
+
+    //     if (isCloudUser == 'yes') {
+    //         // assign device type id s it is needed in asset table
+    //         // options[0] = { name: "Laptop", value: 4 };
+    //         // options[1] = { name: "Desktop", value: 6 };
+    //         //options[2] = {name:"Server",value: 7};
+    //         options[2] = { name: "Cloud Server", value: 16 };
+
+    //     }
+    //     // else {
+    //     //     options[0] = { name: "Laptop", value: 4 };
+    //     //     options[1] = { name: "Desktop", value: 6 };
+    //     // }
+
+    //     for (let i = 0; i < options.length; i++) {
+    //         const option = document.createElement("option");
+    //         option.textContent = options[i].name;
+    //         option.value = options[i].value;
+    //         select.appendChild(option);
+    //     }
+    // }
+
+    // loadDeviceType('no')
+</script>
+<!-- <script>
+    const electron = require('electron');
+    const { app } = require('electron');
+    const exec = require('child_process').exec;
+    const { ipcRenderer } = electron;
+    const { BrowserWindow } = require('electron').remote;
+    const { remote } = require('electron');
+    const root_url = remote.getGlobal('root_url');
+
+    let levelDataGlobal = [];
+    let level_data = [];
+
+
+    function getSystemKey() {
+        const input_values = {};
+        ipcRenderer.send('getSystemKey', input_values);
+    }
+
+    function loadAllocUser(userId) {
+        console.log('loadAllocUser');
+        const input_values = {
+            userID: userId
+        };
+        ipcRenderer.send('loadAllocUser', input_values);
+    }
+
+    function loadAllocDepartment(user_id) {
+        console.log('loadAllocDepartment');
+        console.log("Member id: " + user_id);
+        const input_values = {
+            user_id: user_id
+        };
+        ipcRenderer.send('loadAllocDepartment', input_values);
+    }
+
+    ipcRenderer.on('setAllocDepartment', (event, data) => {
+        console.log(data.length);
+        console.log('data.length');
+        console.log(data);
+        if (data.length > 0) {
+            var select = document.getElementById("alloc_department");
+            if (select) {
+                document.getElementById("alloc_department").options.length = 0;
+
+                var el = document.createElement("option");
+                el.textContent = "Select Department";
+                el.value = "";
+                select.appendChild(el);
+                el = document.createElement("option");
+                // el.textContent = "Create New User";
+                // el.value = "new";
+                // select.appendChild(el);
+
+                if (data && data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        el = document.createElement("option");
+                        el.textContent = data[i][1];
+                        el.value = data[i][0];
+                        select.appendChild(el);
+                    }
+                    // getSystemKey();
+                }
+            }
+
+        }
+    });
+
+    function loadAllocLevel1(user_id) {
+        console.log("Member id: " + user_id);
+        const input_values = {
+            user_id: user_id
+        };
+        ipcRenderer.send('loadAllocLevel1', input_values);
+    }
+
+    ipcRenderer.on('setAllocLevel1', (event, data, userId) => {
+        console.log('data' + data);
+        console.log(data.length);
+        console.log('data.length');
+        console.log(data);
+        if (data.length > 0) {
+            var select = document.getElementById("alloc_level1");
+            console.log('select' + document.getElementById("alloc_level1"));
+            document.getElementById("alloc_level1").options.length = 0;
+
+            var el = document.createElement("option");
+            el.textContent = "Select Level";
+            el.value = "";
+            select.appendChild(el);
+            el = document.createElement("option");
+            // el.textContent = "Create New User";
+            // el.value = "new";
+            // select.appendChild(el);
+            console.log('data' + data);
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    el = document.createElement("option");
+                    console.log(data[i][1]);
+                    if (data[i][1] !== 'NULL' && data[i][1] !== null) {
+                        if (data[i]['level2_count'] > 0)
+                            el.textContent = '+ ' + data[i][1];
+                        else
+                            el.textContent = '- ' + data[i][1];
+                        el.value = data[i][0];
+                        select.appendChild(el);
+
+                    }
+
+
+                }
+                // getSystemKey();
+            }
+        }
+        else {
+            var alloc_level1 = document.getElementById('alloc_level1');
+            alloc_level1.setAttribute('style', 'display:none !important');
+        }
+    });
+
+    function getSelectedValueLevel1(selectElement) {
+        var selectedValue = selectElement.value;
+        userId = document.getElementById("parent_id").value;
+        console.log("Selected value:", selectedValue);
+        console.log('userId:' + userId);
+        if (selectedValue != null || selectedValue != '') {
+            loadAllocLevel2(userId, selectedValue);
+            var alloc_level2 = document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:block !important');
+        }
+        else {
+            var alloc_level2 = document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:none !important');
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+        }
+    }
+    function getSelectedValueLevel2(selectElement) {
+        var selectedValue = selectElement.value;
+        userId = document.getElementById("parent_id").value;
+        console.log("Selected value:", selectedValue);
+        console.log('userId' + userId);
+        if (selectedValue != null || selectedValue != '') {
+            loadAllocLevel3(userId, selectedValue);
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:block !important');
+        }
+        else {
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+        }
+    }
+    function loadAllocLevel2(user_id, level1_parent_id) {
+        console.log("Member id: " + user_id);
+        //   const input_values = {
+        //   user_id: user_id
+        // };
+        ipcRenderer.send('loadAllocLevel2', { user_id, level1_parent_id });
+    }
+
+    ipcRenderer.on('setAllocLevel2', (event, data) => {
+        console.log(data.length);
+        console.log('data.length');
+        console.log(data);
+        if (data.length > 0) {
+            var select = document.getElementById("alloc_level2");
+            if (select) {
+                var alloc_level2 = document.getElementById('alloc_level2');
+                alloc_level2.setAttribute('style', 'display:block !important');
+                //  document.getElementById('err_level2').innerText = '';
+
+                document.getElementById("alloc_level2").options.length = 0;
+
+                var el = document.createElement("option");
+                el.textContent = "Next Level";
+                el.value = "";
+                select.appendChild(el);
+                el = document.createElement("option");
+                // el.textContent = "Create New User";
+                // el.value = "new";
+                // select.appendChild(el);
+
+                if (data && data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        el = document.createElement("option");
+                        if (data[i][1] !== 'NULL' && data[i][1] !== null) {
+                            if (data[i]['level3_count'] > 0)
+                                el.textContent = '+ ' + data[i][1];
+                            else
+                                el.textContent = '- ' + data[i][1];
+                            el.value = data[i][0];
+                            select.appendChild(el);
+                        }
+                    }
+                    // getSystemKey();
+                }
+            }
+
+        }
+        else {
+            var alloc_level2 = document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:none !important');
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+            // document.getElementById('err_level2').innerText = '*Level 2 is not available';
+            // document.getElementById('err_level3').innerText = '';
+        }
+    });
+
+    function loadAllocLevel3(user_id, level2_parent_id) {
+        console.log("Member id: " + user_id);
+        ipcRenderer.send('loadAllocLevel3', { user_id, level2_parent_id });
+    }
+
+
+    ipcRenderer.on('setAllocLevel3', (event, data) => {
+        console.log(data.length);
+        console.log('data.length');
+        console.log(data);
+        if (data.length > 0) {
+            var select = document.getElementById("alloc_level3");
+            if (select) {
+                var alloc_level3 = document.getElementById('alloc_level3');
+                alloc_level3.setAttribute('style', 'display:block !important');
+                // document.getElementById('err_level3').innerText = '';
+
+                document.getElementById("alloc_level3").options.length = 0;
+
+                var el = document.createElement("option");
+                el.textContent = "Next Level";
+                el.value = "";
+                select.appendChild(el);
+                el = document.createElement("option");
+                // el.textContent = "Create New User";
+                // el.value = "new";
+                // select.appendChild(el);
+
+                if (data && data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        el = document.createElement("option");
+                        if (data[i][1] !== 'NULL' && data[i][1] !== null) {
+                            el.textContent = '- ' + data[i][1];
+                            el.value = data[i][0];
+                            select.appendChild(el);
+                        }
+                    }
+                    // getSystemKey();
+                }
+            }
+        }
+        else {
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+            // document.getElementById('err_level3').innerText = '*Level 3 is not available';
+        }
+    });
+
+
+    function loadDevType(isCloudUser) {
+        var select = document.getElementById("device_type");
+        document.getElementById("device_type").options.length = 0;
+        var options = new Array();
+        if (isCloudUser == 'yes') {
+            // assign device type id s it is needed in asset table
+            options[0] = { name: "Laptop", value: 4 };
+            options[1] = { name: "Desktop", value: 6 };
+            //options[2] = {name:"Server",value: 7};
+            options[2] = { name: "Cloud Server", value: 16 };
+
+        } else {
+            options[0] = { name: "Laptop", value: 4 };
+            options[1] = { name: "Desktop", value: 6 };
+        }
+
+        for (var i = 0; i < options.length; i++) {
+            var el = document.createElement("option");
+            el.textContent = options[i].name;
+            el.value = options[i].value;
+            select.appendChild(el);
+        }
+    }
+
+    function validate() {
+        console.log('In validate call');
+        document.getElementById('mail-id-validate').disabled = true
+        document.getElementById('backBtn').disabled = true
+
+        var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+        var error_message = document.getElementById("error_message");
+        if (condition == 'OFFLINE') {
+            error_message.innerHTML = 'No internet connection';
+            return false;
+        } else {
+            error_message.innerHTML = '';
+        }
+
+        var email = document.getElementById('member_email_id').value;
+        console.log(email);
+        if (email != '') {
+            document.getElementById('err_member_email_id').innerText = '';
+            var vali_btn_suc = document.getElementById('btn_validate');
+            // vali_btn_suc.setAttribute('style', 'display:none !important');
+            const input_values = {
+                email: email
+            };
+            console.log('email id is not empty');
+            console.log(input_values);
+            ipcRenderer.send('checkinstalledlicenses', input_values);
+            // ipcRenderer.send('check_member_email',input_values);
+            ipcRenderer.send('executionPolicyScript');
+
+        } else {
+            console.log('Member Email Id Required');
+            document.getElementById('err_member_email_id').innerText = 'Member Email Id Required';
+        }
+        setTimeout(() => {
+            document.getElementById('mail-id-validate').disabled = false
+            document.getElementById('backBtn').disabled = false
+        }, 6000);
+    }
+
+    function IsChecked() {
+        var checkBox = document.getElementById("is_parent_email");
+        if (checkBox.checked == true) {
+            document.getElementById("user_email").value = document.getElementById("member_email_id").value;
+        } else {
+            document.getElementById("user_email").value = '';
+        }
+    }
+    function validateEmail(email) {
+        const emailInput = document.getElementById('user_email');
+        const errorSpan = document.getElementById('err_user_email');
+
+        // Regular expression for general email validation
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+        // Specific .com validation
+        const comDomainRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.com$/;
+
+        if (!emailRegex.test(email)) {
+            errorSpan.textContent = "Invalid email format.";
+            emailInput.classList.add('error'); // Add error class if needed
+            return false;
+        }
+        else {
+            errorSpan.textContent = "";
+            emailInput.classList.remove('error'); // Remove error class if present
+            // Optionally call a function to check for duplication
+            // checkDuplication(email);
+            return true;
+        }
+    }
+
+    function checkDuplication(email) {
+        console.log(email);
+        var parent_user_id = document.getElementById("parent_id").value;
+        const input_values = {
+            email: email,
+            parent_id: parent_user_id
+        };
+        ipcRenderer.send('check_user_email', input_values);
+    }
+
+    function backToMain() {
+        const input_values = {};
+        ipcRenderer.send('cancel_login', input_values);
+    }
+
+    function checkNewUser(val) {
+        if (val == 'new') {
+            // document.getElementById("user_first_name").required = true;
+            // document.getElementById("user_last_name").required = true;
+            // // document.getElementById("user_email").required = true;
+            // document.getElementById("user_contact_no").required = true;
+            // document.getElementById("allocate_department").required = true;
+            document.getElementById('new_user_form').style.display = "block";
+            document.getElementById('existing_user').style.display = "none";
+            // document.getElementById("allocate_level1").required = true;
+            // document.getElementById("allocate_level2").required = true;
+            // document.getElementById("allocate_level3").required = true;
+        }
+        else if (val == 'in_stock') {
+            // document.getElementById("user_first_name").required = true;
+            // document.getElementById("user_last_name").required = true;
+            // // document.getElementById("user_email").required = true;
+            // document.getElementById("user_contact_no").required = true;
+            // document.getElementById("allocate_department").required = true;
+            document.getElementById('new_user_form').style.display = "none";
+            document.getElementById('existing_user').style.display = "none";
+            // document.getElementById("allocate_level1").required = true;
+            // document.getElementById("allocate_level2").required = true;
+            // document.getElementById("allocate_level3").required = true;
+        }
+        else {
+            // document.getElementById("user_first_name").required = false;
+            // document.getElementById("user_last_name").required = false;
+            // document.getElementById("user_email").required = false;
+            // document.getElementById("user_contact_no").required = false;
+            // document.getElementById("allocate_department").required = false;
+            document.getElementById('new_user_form').style.display = "none";
+            document.getElementById('existing_user').style.display = "block";
+            // document.getElementById("allocate_level1").required = false;
+            // document.getElementById("allocate_level2").required = false;
+            // document.getElementById("allocate_level3").required = false;
+        }
+    }
+
+    ipcRenderer.on('checked_user_email', (event, data) => {
+        console.log('data' + data);
+        if (data == 'valid') {
+            document.getElementById("err_user_email").innerText = 'Email Id already exist';
+        } else {
+            document.getElementById("err_user_email").innerText = '';
+        }
+    });
+
+    ipcRenderer.on('setSysKey', (event, data) => {
+        document.getElementById('sys_key').value = data;
+    });
+
+    ipcRenderer.on('setAllocUser', (event, data) => {
+        console.log(data.length);
+        console.log('setAllocUser', JSON.stringify(data))
+
+        // var select = document.getElementById("alloc_users");
+        // document.getElementById("alloc_users").options.length = 0;
+
+        var el = document.createElement("option");
+        el.textContent = "-Select User-";
+        el.value = "";
+        $("#alloc_users").append(el);
+        // el = document.createElement("option");
+        // el.textContent = "Create New User";
+        // el.value = "new";
+        // select.appendChild(el);
+
+
+        let unique_data = {}
+        for (let item of data) {
+            if (item[0].trim().length < 1) continue
+            unique_data[item[1]] = item[0].trim()
+        }
+
+        let sorted_data = []
+        for (let id in unique_data) {
+            sorted_data.push({ id, text: unique_data[id] })
+        }
+        sorted_data = sorted_data.sort((a, b) => {
+            if (a.text < b.text) {
+                return -1; // a comes before b
+            }
+            if (a.text > b.text) {
+                return 1; // a comes after b
+            }
+            return 0;
+        })
+
+        for (let { id, text } of sorted_data) {
+            const option = document.createElement('option')
+            option.textContent = text
+            option.value = id
+            $('#alloc_users').append(option)
+        }
+
+
+        // if (data && data.length > 0) {
+        //     for (var i = 0; i < data.length; i++) {
+        //         el = document.createElement("option");
+        //         el.textContent = data[i][0];
+        //         el.value = data[i][1];
+        //         select.appendChild(el);
+        //     }
+        // }
+        // getSystemKey();
+    });
+
+
+    ipcRenderer.on('checked_member_email', (event, data) => {
+        if (data.status == 'invalid' || data.status == 'failed') {
+            document.getElementById("err_member_email_id").innerText = 'Email Id does not exist';
+            var vali_btn_err = document.getElementById('btn_validate');
+            // vali_btn_err.setAttribute('style', 'display:none !important');
+            //document.getElementById("member_email_id").value = "";
+        } else {
+            document.getElementById("err_member_email_id").innerText = '';
+            document.getElementById("parent_id").value = data.user_id;
+            document.getElementById("client_no").value = data.client_no;
+            document.getElementById("token").value = data.token;
+            loadAllocUser(data.user_id);
+            loadAllocDepartment(data.user_id);
+            loadAllocLevel1(data.user_id);
+
+            var alloc_level2 = document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:none !important');
+
+            var alloc_level3 = document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+
+            if (data.user_type == '2' && data.member_type == '5') {
+                loadDevType('yes');
+            } else {
+                loadDevType('no');
+            }
+            document.getElementById('after_validate').style.display = 'block';
+            document.getElementById('allocate_user').style.display = 'block';
+            document.getElementById('additional-fields').style.display = 'block';
+            document.getElementById('mail-id-validate').style.display = 'none';
+            document.getElementById('submitBtn').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'block';
+        }
+    });
+
+
+    ipcRenderer.on('checked_installed_licenses', (event, data) => {
+        console.log('checked_installed_licenses: ' + data.status);
+        if (data.status == 'success') {
+            var email = document.getElementById('member_email_id').value;
+            const input_values = {
+                email: document.getElementById('member_email_id').value
+            };
+            getSystemKey()
+            ipcRenderer.send('fetch_level_si', input_values);
+            ipcRenderer.send('check_member_email', input_values);
+            //  ipcRenderer.send('executionPolicyScript');
+            ipcRenderer.send('hideDeskstopEpromptoApp');
+            ipcRenderer.send('hideEpromptoApp', input_values);
+        }
+        else if (data.status == 'failed') {
+            document.getElementById("err_member_email_id").innerText = ' Allocated license has been exceeded, kindly contact administrator.';
+            var vali_btn_err = document.getElementById('btn_validate');
+            // vali_btn_err.setAttribute('style', 'display:none !important');
+        }
+        else if (data.status == 'error') {
+            document.getElementById("err_member_email_id").innerText = 'Email Id does not exist.';
+            var vali_btn_err = document.getElementById('btn_validate');
+            // vali_btn_err.setAttribute('style', 'display:none !important');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const staticFormHtml = `<div>
+                          <input type="text" class="input100"  name="user_first_name" id="user_first_name" placeholder="First Name *"  pattern="[A-Za-z0-9 ]+" oninvalid="this.setCustomValidity('Enter only alphabet *')"  >
+                          <span class="focus-input100" id="err_user_first_name" style="color:#B22222; font-weight: bold;"></span>
+                      </div>
+                     
+                      <div class="">
+                          <input class="input100" type="text" name="user_last_name" id="user_last_name" placeholder="Last Name *"  pattern="[A-Za-z0-9 ]+" oninvalid="this.setCustomValidity('Enter only alphabet *')" > 
+                          <span class="focus-input100" id="err_user_last_name" style="color:#B22222; font-weight: bold;"></span>
+                      </div>
+                      
+                        <div class="fontusercontact">
+                          
+                            <input class="input100" type="text" name="user_contact_no" id="user_contact_no" placeholder="Contact No (Optional)" pattern="[0-9]*" maxlength="10" minlength="10" >
+                           
+                        </div>
+                        
+                      <div class="fontuseremail">
+                        <input class="input100" type="email" name="user_email" id="user_email" placeholder="Email (Optional)" onchange="checkDuplication(this.value)" >
+                       
+                        
+                      </div>   `;
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', submitForm);
+
+        ipcRenderer.on('setvaluelevelsi', (event, data, level_data) => {
+            console.log(level_data);
+            levelDataGlobal = level_data;
+            //  setAllocLevel1(levelDataGlobal);
+            ipcRenderer.send('request-dynamic-content', data, level_data);
+        });
+
+
+        ipcRenderer.on('response-dynamic-content', (event, dynamicFieldsHtml, isEmpty) => {
+            if (isEmpty) {
+                document.getElementById('additional-fields').style.display = 'none';
+                document.getElementById('static-fields').innerHTML = staticFormHtml;
+                // setAllocLevel1(levelDataGlobal);
+                // setAllocLevel2(levelDataGlobal);
+                // setAllocLevel3(levelDataGlobal); 
+
+            } else {
+                document.getElementById('static-fields').style.display = 'none';
+                document.getElementById('additional-fields').innerHTML = dynamicFieldsHtml;
+                // setAllocLevel1(levelDataGlobal);
+                // setAllocLevel2(levelDataGlobal);
+                // setAllocLevel3(levelDataGlobal); 
+
+            }
+        });
+
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('submitBtn').disabled = true
+            document.getElementById('backBtn').disabled = true
+            console.log('In SubmitForm');
+
+            var condition = navigator.onLine ? "ONLINE" : "OFFLINE";
+            var error_message = document.getElementById("error_message");
+
+            if (condition == 'OFFLINE') {
+                error_message.innerHTML = 'No internet connection';
+                return false;
+            } else {
+                error_message.innerHTML = '';
+            }
+
+            var sys_key = document.querySelector('#sys_key').value || '';
+            var user_type = document.querySelector('#user_type').value || '';
+            console.log(user_type);
+            var asset_status = 1;
+            if (user_type == 'new') {
+                var user_id = 'new';
+            }
+            else if (user_type == 'in_stock') {
+                var user_id = 'in_stock';
+                asset_status = 2;
+            }
+
+            else {
+                var user_id = document.querySelector('#alloc_users')?.value || '';
+            }
+            console.log(user_id);
+            var department_id = document.querySelector('#alloc_department')?.value || '';
+            var dev_type = document.querySelector('#device_type')?.value || '';
+            var client_no = document.querySelector('#client_no').value || '';
+            var token = document.querySelector('#token').value || '';
+            var title_type = document.querySelector('#title_type')?.value || '';
+            var user_first_name = document.querySelector('#user_first_name')?.value || '';
+            var user_last_name = document.querySelector('#user_last_name')?.value || '';
+            // var user_email = document.querySelector('#user_email')?.value || '';
+            var user_email = document.querySelector('#member_email_id')?.value || '';
+            var user_contact_no = document.querySelector('#user_contact_no')?.value || '';
+            var level1_id = document.querySelector('#alloc_level1')?.value || '';
+            var level2_id = document.querySelector('#alloc_level2')?.value || '';
+            var level3_id = document.querySelector('#alloc_level3')?.value || '';
+            var level1_name = document.querySelector('#alloc_level1')?.selectedOptions[0]?.text || '';
+            var level2_name = document.querySelector('#alloc_level2')?.selectedOptions[0]?.text || '';
+            var level3_name = document.querySelector('#alloc_level3')?.selectedOptions[0]?.text || '';
+            parent_id = document.getElementById("parent_id").value;
+            console.log('parent_id' + parent_id);
+            document.getElementById('all-loader').style.display = 'block';
+
+            //  alert(sys_key);
+            if (sys_key != '' && user_id != '' && dev_type != '') {
+
+                const input_values = {
+                    system_key: sys_key,
+                    userId: user_id,
+                    clientno: client_no,
+                    token: token,
+                    title: title_type,
+                    usr_first_name: user_first_name,
+                    usr_last_name: user_last_name,
+                    usr_email: user_email,
+                    usr_contact: user_contact_no,
+                    device_type: dev_type,
+                    departmentId: department_id,
+                    levelId1: level1_id,
+                    levelId2: level2_id,
+                    levelId3: level3_id,
+                    level1_name: level1_name,
+                    level2_name: level2_name,
+                    level3_name: level3_name,
+                    parent_id: parent_id,
+                    asset_status: asset_status
+                };
+                console.log(input_values);
+
+                ipcRenderer.send('login_data', input_values);
+                // document.login_form.reset();
+                setTimeout(() => {
+                    document.getElementById('submitBtn').disabled = false
+                    document.getElementById('backBtn').disabled = false
+                }, 1000 * 10);
+            }
+
+        }
+
+
+    });
+
+</script> -->
+
+<script>
+    $('#alloc_users').select2({
+        placeholder: "Select user",
+        closeOnSelect: true,
+        // allowClear: true,
+        // sorter: (a,b)=>{}
+    });
+
+
+    //***********************************************
+    //*********** email enter validate **************
+    //***********************************************
+    // $('#login_form').on("keypress", event => {
+    //     if (
+    //         event.key === "Enter" &&
+    //         document.getElementById('mail-id-validate').style.display != 'none'
+    //     ) {
+    //         event.preventDefault()
+    //     }
+    // })
+    // $('#member_email_id').on("keypress", event => {
+    //     if (event.key === "Enter") {
+    //         event.preventDefault();
+    //         validate()
+    //     }
+    // });
+    //***********************************************
+
+    // console.log(
+    //     BrowserWindow.getFocusedWindow().getBounds()
+    // )
+    // ipcRenderer.eventNames().forEach((eventName) => {
+    //     ipcRenderer.on(eventName, (event, ...args) => {
+    //         console.log('IPC', eventName, args);
+    //     });
+    // });
+
+</script>
+
+</html>

@@ -53,6 +53,16 @@ a, a:visited, a:active {
   color: #000864;
 }
 
+#editLevel
+{
+  position: absolute;
+  top: 3px;
+  left: 75px;
+  font-size: 26px;
+  text-align: center;
+  color: #000864;
+}
+
 /* #btn_log
 {
   margin: 0px !important;

@@ -79,11 +79,11 @@
 
 .content-align-head{
 	text-align: right;
-	width: 50%;
+	width: 25%;
 }
 .content-align-body{
 	text-align: left;
-	width: 50%;
+	width: 75%;
 }
 .table thead th{
   vertical-align: top!important;

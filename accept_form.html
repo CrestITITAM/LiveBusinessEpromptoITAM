@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+     <!--======================================================================================--> 
+      <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <!--=======================================================================================-->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../css/util.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../css/are_you_member.css">
+    <!--=======================================================================================-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 
+    <style>
+        /* Basic styling for the policy display */
+        #policy-container {
+            margin: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .custom-br {
+           margin: 8px 0; /* Adds space above and below */
+         }
+    </style>
+  
+  </head>
+  <body>
+
+    <div class="container transform-master">
+        <div>
+            <h4 style="font-size: 13px;text-align: center;">Policy Acceptance</h4>
+            <h5 style="font-size: 13px;">Policy: <span id="company_title"></span></h5>
+            <input type="hidden" id="company_policy_id" value="company_policy_id">
+            <p ><span style="font-size: 12px;">Dear <span id="asset_name"></span>,<div id="company_policy" style="font-size: 12px;"></div> </p>
+            <label style="font-size: 12px;">
+                <input type="checkbox" id="myCheckbox" > I Accept the Policy.
+            </label>
+            <br class="custom-br">
+            <button id="submitBtn" class="btn btn-primary" disabled>Submit</button>
+        </div>
+    
+        <script>
+            const { ipcRenderer } = require('electron');
+            document.getElementById('myCheckbox').addEventListener('change', (event) => {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = !event.target.checked; // Enable/disable based on checkbox state
+        });
+    
+            // Event listener for submit button
+            document.getElementById('submitBtn').addEventListener('click', () => {
+                const checkboxValue = document.getElementById('myCheckbox').checked;
+                const companyPolicyIdValue = document.getElementById('company_policy_id').value; // Get the value here
+               console.log('checkboxValue'+checkboxValue);
+                if(checkboxValue == true)
+                {
+                    submitBtn.disabled = true;
+                    ipcRenderer.send('check_first_acceptance_policy', checkboxValue, companyPolicyIdValue);
+                }
+               
+            });
+    
+            // Show the custom dialog on page load
+         
+        </script>
+    
+      
+    </div>
+    <br><br>
+    <footer>
+        <div class="footer footer-bottom text-center ticket_footer"> 
+          </span>
+        </div>
+    </footer>
+  
+  </body>
+
+</html>
+<!-- <script>
+
+    let policies = [];
+    let currentIndex = 0;
+
+    // Listen for the policy data
+    ipcRenderer.on('policy_data', (event, data) => {
+        console.log(data);
+        console.log(asset_name);
+        policies = data.policyData; // Get the policy data
+
+        if (policies.length > 0) {
+            displayPolicy(); // Start displaying the first policy
+        }
+    });
+
+    function displayPolicy() {
+        if (currentIndex >= policies.length) {
+            // All policies have been displayed
+            document.getElementById('submitBtn').disabled = false; // Enable the submit button
+            return;
+        }
+
+        const currentPolicy = policies[currentIndex];
+        document.getElementById("company_policy").innerHTML = currentPolicy.policy; 
+        document.getElementById("company_title").innerText = currentPolicy.title; 
+        document.getElementById("company_policy_id").value = currentPolicy.company_policy_id; 
+        document.getElementById("asset_name").innerText = asset_name; // Update as needed
+
+        // Set timeout to show the next policy after 1 minute (60000 ms)
+        setTimeout(() => {
+            currentIndex++; // Move to the next policy
+            displayPolicy(); // Recursively call to display the next policy
+        }, 60000); // Change this value for different intervals
+    }
+</script> -->
+<script>
+    ipcRenderer.on('policy_data', (event, data) => 
+    {
+        console.log(data);
+        document.getElementById("company_policy").innerHTML = data.policy.policy || "Policy not available.";
+        document.getElementById("company_title").innerText = data.policy.title || "No title available.";
+        document.getElementById("company_policy_id").value = data.policy.company_policy_id || "";
+        document.getElementById("asset_name").innerText = data.asset_name || "---";
+    });
+   
+</script>

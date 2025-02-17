@@ -18,12 +18,26 @@
 		  display: inline-block;
 		  font-size: 16px;
 	}
+    
+    body{
+        background: #FFF;
+    }
+
+    label {
+        cursor: pointer;
+    }
 </style>
 <body>
 <div>
   
   <div id="myModal">
-    <p><input type="checkbox" class="form-check-input" id="is_policy_check" name="is_policy_check" style="width: 15px;margin-left: 0px;" onclick="IsChecked()"><b style="padding-bottom: 25px;"> Accept Privacy Policy</b><br>We use cookies to enhance the experience, to display customized content in accordance with your browser settings, and to help us better understand how you use our website. To read about how we use cookies and how you can control them <a id="policy" href="#" onclick="openPolicy()">here</a>. If you continue to use this site, you consent to our use of cookies..</p>
+    <p>
+        <span>
+            <input type="checkbox" class="form-check-input" id="is_policy_check" name="is_policy_check" style="width: 15px;margin-left: 0px;" onclick="IsChecked()">
+            <label for="is_policy_check"><b style="padding-bottom: 25px;"> Accept Privacy Policy</b></label>
+        </span>
+        <br>
+        We use cookies to enhance the experience, to display customized content in accordance with your browser settings, and to help us better understand how you use our website. To read about how we use cookies and how you can control them <a id="policy" href="#" onclick="openPolicy()">here</a>. If you continue to use this site, you consent to our use of cookies..</p>
   </div>
  
 </div>

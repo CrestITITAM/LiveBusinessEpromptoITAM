@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+     <!--======================================================================================--> 
+      <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <!--=======================================================================================-->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../css/util.css">
+    <!--=======================================================================================-->
+      <link rel="stylesheet" type="text/css" href="../css/are_you_member.css">
+    <!--=======================================================================================-->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <!--=======================================================================================-->
+        <!--   <link href='../css/select2.min.css' rel='stylesheet' type='text/css'>
+         <script src="../js/select2.min.js"></script> -->
+         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <!--=======================================================================================-->
+    <style>
+      body{
+      background: transparent!important;  
+      }
+
+    .transform-master{
+        box-shadow: inset 0px 0px 1px 1px #0000002e;
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+    }
+
+    a#btn_back:hover {
+      color: #fff;
+      background: #000864;
+    }
+    </style>
+    <!--=======================================================================================-->
+  </head>
+  <body onLoad="getLevelData()" style="overflow-y: hidden;">
+    <!-- <div class="main_header">
+         <a href="../index.html" class="img-margin-ticket"><img src="../images/logo1.png"/></a>
+         <span class="glyphicon glyphicon-cog pull-right setting_btn" onclick="openNav()"></span>
+    </div> -->
+    <div class="container transform-master">
+        <span class="text-center" style="color:red; font-weight: bold;" id="error_message"></span>
+        <br>
+        <p id="ticket_message" style="display: none"></p> 
+        <br>
+        <div id="ticket_body">
+          
+          <form  id="pc_cat_form" name="pc_cat_form" class="form" style="position:relative; top: 0.5rem;" method="post" >
+            	<input type="text" id="parent_id" name="parent_id" >
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="" id="allocate_level1">
+                        <select class="input100" id="alloc_level1" onchange="getSelectedValueLevel1(this)">
+                          <option value="" selected disabled>Select Level</option>
+                        </select>
+                        </div>
+                        <!-- <span class="" id="err_level2" style="color: #a6a6a6;font-size: 15px;font-style: italic;"></span> -->
+                        <div class="" id="allocate_level2">
+                          <select class="input100" id="alloc_level2" onchange="getSelectedValueLevel2(this)">
+                            <option value="" selected disabled>Next Level</option>
+                          </select>
+                          </div>
+                          <!-- <span class="" id="err_level3" style="color: #a6a6a6;font-size: 15px;font-style: italic;"></span> -->
+                          <div class="" id="allocate_level3">
+                            <select class="input100" id="alloc_level3">
+                              <option value="" selected disabled>Next Level</option>
+                            </select>
+                            </div>
+                            <div class="col-xs-12" style="margin-top: 10px;">
+                              <div id="all-loader"></div>
+                                 <div class="col-xs-6">
+                                <button class="btn login100-form-btn" type="submit" id="btn_log" style="height: 30px; margin: 0px">Submit</button> 
+                            </div>
+                                 <div class="col-xs-6 anchor-other">
+                                  <a href="../index.html" id="btn_back_one" class="btn  login100-form-btn" style="height: 30px; margin: 0px;">&nbsp;&nbsp;Back</a>
+                                 </div>
+                            </div>
+                </div>
+            </div>
+          </form>
+        </div>
+        <div class="text-center">
+          <a href="../index.html" id="btn_back" class="btn  login100-form-btn" style="display: none; height: 20px; margin: 0px;">Back</a>
+        </div>
+    </div>
+    <br><br>
+    <footer>
+        <div class="footer footer-bottom text-center ticket_footer"> 
+          </span>
+        </div>
+    </footer>
+  
+  </body>
+
+  <script>window.$ = window.jQuery = require('jquery');</script>
+  <script>
+  	const {remote} = require('electron');
+  	const {BrowserWindow} = require('electron').remote;
+  	const {ipcRenderer} = require('electron');
+    const root_url = remote.getGlobal('root_url');
+    const ipc = require('electron').ipcRenderer;
+
+  	const sys_name = remote.getGlobal('Sys_name');
+ 
+
+    const device_type_id = remote.getGlobal('deviceID');
+
+  	const username = remote.getGlobal('userName');
+    
+
+   function getLevelData()
+   {
+    var condition = navigator.onLine ? "ONLINE" : "OFFLINE";             
+       var error_message = document.getElementById("error_message"); 
+        if(condition == 'OFFLINE'){
+          error_message.innerHTML = 'No internet connection';
+          setTimeout(function(){
+
+            error_message.innerHTML = '';
+          },10000);
+          window.scrollTo(0,0);
+          return false;
+        }
+  		 var a=window.location.href.split('#')[1],
+  		 type=a.split('=')[1];
+         console.log('++++='+type);
+  		 document.getElementById("parent_id").value = type;
+  		
+    const userid = remote.getGlobal('loginid');
+
+    console.log('userid++++++++++++++++++++++++=='+userid);
+ 
+    loadAllocLevel1(parent_id);
+    function loadAllocLevel1(parent_id){
+          console.log(parent_id);
+          const input_values = {
+            parent_id: parent_id
+        };
+        ipcRenderer.send('loadAllocLevel1',input_values);
+        }
+        
+        ipcRenderer.on('setAllocLevel1', (event, data, userId) => 
+        { 
+          console.log('data'+data);
+          console.log(data.length);
+          console.log('data.length');
+          console.log(data);
+          if(data.length > 0)
+          {
+            var select = document.getElementById("alloc_level1"); 
+            console.log('select'+document.getElementById("alloc_level1"));
+            document.getElementById("alloc_level1").options.length = 0;
+
+            var el = document.createElement("option");
+            el.textContent = "Select Level";
+            el.value = "";
+            select.appendChild(el);
+            el = document.createElement("option");
+            // el.textContent = "Create New User";
+            // el.value = "new";
+            // select.appendChild(el);
+            console.log('data'+data);
+            if(data && data.length > 0 ){
+              for(var i = 0; i < data.length; i++) {
+                el = document.createElement("option");
+                console.log(data[i][1]);
+                if(data[i][1] !== 'NULL' && data[i][1] !== null)
+                {
+                  if(data[i]['level2_count'] > 0)
+                     el.textContent = '+ '+data[i][1];
+                  else  
+                    el.textContent = '- '+data[i][1];
+                  el.value = data[i][0];
+                  select.appendChild(el);
+                 
+                }
+
+            
+              }
+              getSystemKey();
+            }
+          }
+          else{
+            var alloc_level1 =  document.getElementById('alloc_level1');
+            alloc_level1.setAttribute('style', 'display:none !important');
+          }
+        });
+
+        function getSelectedValueLevel1(selectElement) {
+          var selectedValue = selectElement.value;
+          userId = document.getElementById("parent_id").value;
+          console.log("Selected value:", selectedValue);
+          console.log('userId:'+userId);
+          if(selectedValue != null || selectedValue != '')
+          {
+            loadAllocLevel2(userId,selectedValue);
+            var alloc_level2 =  document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:block !important');
+          }
+          else
+          {
+            var alloc_level2 =  document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:none !important');
+            var alloc_level3 =  document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+          }
+      }
+      function getSelectedValueLevel2(selectElement) {
+          var selectedValue = selectElement.value;
+          userId = document.getElementById("parent_id").value;
+          console.log("Selected value:", selectedValue);
+          console.log('userId'+userId);
+          if(selectedValue != null || selectedValue != '')
+          {
+            loadAllocLevel3(userId,selectedValue);
+            var alloc_level3 =  document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:block !important');
+          }
+          else
+          {
+            var alloc_level3 =  document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+          }
+      }
+        function loadAllocLevel2(user_id,level1_parent_id){
+          console.log("Member id: "+user_id);
+        //   const input_values = {
+        //   user_id: user_id
+        // };
+        ipcRenderer.send('loadAllocLevel2',{user_id,level1_parent_id});
+        }
+
+        ipcRenderer.on('setAllocLevel2', (event, data) => 
+        { console.log(data.length);
+          console.log('data.length');
+          console.log(data);
+          if(data.length > 0)
+          {
+            var select = document.getElementById("alloc_level2");
+            if(select)
+            {
+              var alloc_level2 =  document.getElementById('alloc_level2');
+             alloc_level2.setAttribute('style', 'display:block !important');
+            //  document.getElementById('err_level2').innerText = '';
+
+              document.getElementById("alloc_level2").options.length = 0;
+              
+              var el = document.createElement("option");
+              el.textContent = "Next Level";
+              el.value = "";
+              select.appendChild(el);
+              el = document.createElement("option");
+              // el.textContent = "Create New User";
+              // el.value = "new";
+              // select.appendChild(el);
+
+              if(data && data.length > 0 ){
+                for(var i = 0; i < data.length; i++) {
+                  el = document.createElement("option");
+                  if(data[i][1] !== 'NULL' && data[i][1] !== null)
+                  {
+                    if(data[i]['level3_count'] > 0)
+                        el.textContent = '+ '+data[i][1];
+                    else  
+                        el.textContent = '- '+data[i][1];
+                    el.value = data[i][0];
+                    select.appendChild(el);
+                  }
+                }
+                getSystemKey();
+              } 
+            } 
+           
+          }
+          else{
+            var alloc_level2 =  document.getElementById('alloc_level2');
+            alloc_level2.setAttribute('style', 'display:none !important');
+            var alloc_level3 =  document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+            // document.getElementById('err_level2').innerText = '*Level 2 is not available';
+            // document.getElementById('err_level3').innerText = '';
+          }
+        });
+
+        function loadAllocLevel3(user_id, level2_parent_id){
+          console.log("Member id: "+user_id);
+          ipcRenderer.send('loadAllocLevel3',{user_id,level2_parent_id});
+        }
+
+        
+        ipcRenderer.on('setAllocLevel3', (event, data) => 
+        { console.log(data.length);
+          console.log('data.length');
+          console.log(data);
+          if(data.length > 0)
+          {
+            var select = document.getElementById("alloc_level3"); 
+            if(select)
+            {
+              var alloc_level3 =  document.getElementById('alloc_level3');
+              alloc_level3.setAttribute('style', 'display:block !important');
+              // document.getElementById('err_level3').innerText = '';
+
+              document.getElementById("alloc_level3").options.length = 0;
+
+                var el = document.createElement("option");
+                el.textContent = "Next Level";
+                el.value = "";
+                select.appendChild(el);
+                el = document.createElement("option");
+                // el.textContent = "Create New User";
+                // el.value = "new";
+                // select.appendChild(el);
+
+                if(data && data.length > 0 )
+                {
+                  for(var i = 0; i < data.length; i++) {
+                    el = document.createElement("option");
+                    if(data[i][1] !== 'NULL' && data[i][1] !== null)
+                    {
+                      el.textContent = '- '+data[i][1];
+                      el.value = data[i][0];
+                      select.appendChild(el);
+                    }
+                  }
+                  getSystemKey();
+                }
+            }
+          }
+          else{
+            var alloc_level3 =  document.getElementById('alloc_level3');
+            alloc_level3.setAttribute('style', 'display:none !important');
+           // document.getElementById('err_level3').innerText = '*Level 3 is not available';
+          }
+        });
+
+   }     
+  function openNav() {
+       //document.getElementById("mySidenav").style.width = "150px";
+        const input_values = {};
+        ipcRenderer.send('openTabs',input_values);
+     }
+
+     // function Back(){
+     //    const input_values = {};
+     //    ipcRenderer.send('back_to_main',input_values);
+     // }
+
+     function closeNav() {
+       document.getElementById("mySidenav").style.width = "0";
+     }
+
+    function reconnect(){
+      const input_values = {};
+      var window = BrowserWindow.getFocusedWindow();
+      window.close();
+      ipcRenderer.send('internet_reconnect',input_values);
+    }
+
+  	const form = document.querySelector('form');
+  	form.addEventListener('submit',submitForm);
+
+  	function submitForm(e){ 
+  		e.preventDefault(); 
+
+      var condition = navigator.onLine ? "ONLINE" : "OFFLINE";             
+      var error_message = document.getElementById("error_message"); 
+      if(condition == 'OFFLINE'){
+        error_message.innerHTML = 'No internet connection';
+        setTimeout(function(){
+
+          error_message.innerHTML = '';
+        },2000);
+        window.scrollTo(0,0);
+        return false;
+      }/*else{
+        error_message.innerHTML = 'You are back';
+      }*/
+
+      var content = document.querySelector('#txtdesc').value;
+      if(content.length < 1){
+        document.getElementById('err_on_submit').innerText='Require description';
+      }else{
+        document.getElementById('err_on_submit').innerText='';
+        document.getElementById('all-loader').style.display='block';
+        var vali_btn_log =  document.getElementById('btn_log');
+        vali_btn_log.setAttribute('style', 'display:none !important');
+        var vali_btn_back =  document.getElementById('btn_back_one');
+        vali_btn_back.setAttribute('style', 'display:none !important');
+
+
+        issue_type = document.querySelector('#issue_type').value;
+        if(issue_type == 'PC'){
+          categories = document.querySelector('#pc_category').value;
+        }else if(issue_type == 'WiFi'){
+          categories = document.querySelector('#wifi_category').value;
+        }else if(issue_type == 'Network'){
+          categories = document.querySelector('#network_category').value;
+        }else if(issue_type == 'Antivirus'){
+          categories = document.querySelector('#anti_category').value;
+        }else if(issue_type == 'Application'){
+          categories = document.querySelector('#app_category').value;
+        }else if(issue_type == 'Printers'){
+          categories = document.querySelector('#printer_category').value;
+        }
+
+        const input_values = {
+          type: document.querySelector('#main_category').value,
+          disp_type : issue_type,
+          category: categories,
+          desc : document.querySelector('#txtdesc').value,
+          user_id : userid,
+          clientid : client_id,
+          assetID : asset_id
+        };
+        ipcRenderer.send('form_data',input_values);
+      }
+  	}
+
+   function newwin(win_type){
+      const input_values = {
+        type: win_type, 
+        clientid : client_id
+      };
+      ipcRenderer.send('newwindow',input_values);
+   }
+
+    ipcRenderer.on('ticket_submit', (event, data) => {
+
+      if(data['status'] == 1){
+        document.getElementById('ticket_message').innerText='\n\n'+'Your ticket is raised successfully with Ticket No. '+data['ticketNo']+'\n\n';
+        document.getElementById('ticket_message').style.display='block';
+        document.getElementById('ticket_body').style.display='none';
+        document.getElementById('ticket_body').style.color='blue';
+        var vali_btn_back =  document.getElementById('btn_back');
+        vali_btn_back.setAttribute('style', 'display:block !important');
+      }else if(data['status'] == 0){
+        document.getElementById('ticket_message').innerText='\n\n'+'Ticket not submitted. Please try again!'+'\n\n';
+        document.getElementById('ticket_message').style.display='block';
+        document.getElementById('ticket_body').style.display='block';
+        document.getElementById('ticket_body').style.color='red';
+        var vali_btn_back =  document.getElementById('btn_back');
+        vali_btn_back.setAttribute('style', 'display:block !important');
+      }
+    });
+  </script>
+</html>

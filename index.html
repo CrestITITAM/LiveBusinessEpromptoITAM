@@ -14,6 +14,9 @@
     color: #747477 !important;
     text-decoration: none !important;
 }
+.d-none{
+    display: none !important;
+}
     </style>
    </head>
   <body onLoad="checkConnection()">
@@ -29,7 +32,7 @@
         <i class="fa fa-cog" style="cursor: pointer" title="Settings" onclick="openNav()"></i>                  
       </div>
 
-      <div id="ticket_new">
+      <div id="ticket_new" class="d-none">
           <i class="fa fa-ticket" style="cursor: pointer" title="Log Ticket" onClick="sendto('PC');"></i>
       </div>
 
@@ -43,7 +46,7 @@
 
     </div>
     <div class="text-sucess"><b>Agent</b></div>
-     <div class="" style="text-align: center;">  <span style="font-size: 12px;" id="version_no" style="cursor: pointer" title="Developer">Version 4.0.81</span></div>
+     <div class="" style="text-align: center;">  <span style="font-size: 12px;" id="version_no" style="cursor: pointer" title="Developer">Version 5.1.3</span></div>
     <div class="container">  
         <form role="form">
            <div id="network_issue" class="network_issue" >
@@ -66,8 +69,19 @@
 
 
     <div class="footer footer-bottom text-center" style="height: 44px;"> 
-      <a id="email_href" href="mailto:eprompto.helpdesk@crestit.in"><i class="footer-text" aria-hidden="true"></i> <span id="itam_display_email" style="color:white;font-size: 11px;" class="footer-text"><b>eprompto.helpdesk@crestit.in</b></span></a><br>
-      <a id="tel_href" href="tel:+912246034520"><i class="footer-text" aria-hidden="true"></i> <span id="itam_contact_no" style="color:white;font-size: 11px;" ><b>+91-22-46034520</b></span></a>
+        <a id="email_href" href="mailto:eprompto.helpdesk@crestit.in">
+            <i class="footer-text" aria-hidden="true"></i>
+            <span id="itam_display_email" style="color:white;font-size: 11px;" class="footer-text">
+                <b>eprompto.helpdesk@crestit.in</b>
+            </span>
+        </a>
+        <br>
+        <a id="tel_href" href="tel:+912246034520">
+            <i class="footer-text" aria-hidden="true"></i>
+            <span id="itam_contact_no" style="color:white;font-size: 11px;">
+                <b>+91-22-46034520</b>
+            </span>
+        </a>
       </span>
     </div>
 
@@ -80,6 +94,8 @@
   const message = document.getElementById('message');
   const restartButton = document.getElementById('restart-button');
 
+  var electron = require('electron');
+  var {session} = require('electron').remote;
   const {remote} = require('electron');
   const {BrowserWindow} = require('electron').remote;
   
@@ -88,11 +104,16 @@
 
 ipcRenderer.send('get_company_logo');
 
-ipcRenderer.on('checked_company_logo', (event, data,server_url) => {
-  console.log(data);
-  console.log(server_url);
+ipcRenderer.on('checked_company_logo', (event, data,server_url,sys_key,asset_id, asset_status) => {
+//   console.log(data);
+//   console.log(server_url);
+//   console.log(sys_key);
+//   console.log(asset_id);
+  console.log('checked_company_logo',{
+    data,server_url,sys_key,asset_id, asset_status
+  })
   if(data[0]){
-    document.getElementById("company_logo").src = server_url+'/assets/backend//uploads/media/'+data[0];
+    document.getElementById("company_logo").src = server_url+'/assets/backend/uploads/media/'+data[0];
     document.getElementById("clickable-region").href = server_url+'/account';
     // document.getElementById("company_logo").style.visibility = "visible";
   }
@@ -103,6 +124,9 @@ ipcRenderer.on('checked_company_logo', (event, data,server_url) => {
   if(data[2]){
     document.getElementById("itam_contact_no").innerHTML = "<b>"+data[2]+"<b>";
     document.getElementById("tel_href").href = "tel:"+data[2];
+  }
+  if(asset_status && asset_status==1){
+    // document.getElementById("ticket_new").classList.remove('d-none')
   }
 });
 

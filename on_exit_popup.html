@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title></title>
+</head>
+<style type="text/css">
+    :root {
+        --primary: #000864
+    }
+
+    button.primary,
+    button.primary:hover,
+    button.primary:active {
+        color: white;
+        border-color: var(--primary);
+        background-color: var(--primary);
+        opacity: 1;
+    }
+</style>
+
+<body class="container">
+
+    <form method="post" action="#" class="d-flex flex-column" style="gap: 0.5rem;">
+
+        <span>
+            <label for="password"><small>Enter password</small></label>
+            <div class="input-group input-group-sm">
+                <input type="password" class="form-control form-control-sm border-right-0" name="admin-psswd-input"
+                    id="admin-psswd-input" placeholder="Password" required>
+                <div class="input-group-append border-left-0">
+                    <button class="input-group-text bg-transparent" id="show-hide-psswd-btn" onclick="show_hide_psswd()"
+                        type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-eye-fill d-none" viewBox="0 0 16 16">
+                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                            <path
+                                d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
+                            <path
+                                d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <small class="text-danger" id="admin-psswd-err-text">&nbsp;</small>
+        </span>
+
+        <span class="align-self-end mt-1">
+            <button type="button" class="btn btn-sm btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-sm primary">Submit</button>
+        </span>
+
+    </form>
+
+</body>
+<script>
+    const ipc_renderer = require('electron').ipcRenderer;
+    let show_password = false
+    function show_hide_psswd() {
+        show_password = !show_password
+
+        if (show_password) {
+            document.querySelector('.bi.bi-eye-fill').classList.remove('d-none')
+            document.querySelector('.bi.bi-eye-slash-fill').classList.add('d-none')
+            document.getElementById('admin-psswd-input').type = 'text'
+        } else {
+            document.querySelector('.bi.bi-eye-fill').classList.add('d-none')
+            document.querySelector('.bi.bi-eye-slash-fill').classList.remove('d-none')
+            document.getElementById('admin-psswd-input').type = 'password'
+        }
+    }
+
+    document.querySelector('form').addEventListener('submit', (form_event) => {
+        form_event.preventDefault();
+
+        document.getElementById('admin-psswd-err-text').innerHTML = "&nbsp;";
+        // console.log(form_event.target['admin-psswd-input'].value)
+
+        ipc_renderer.send('exit_app_form_submit', { admin_password: form_event.target['admin-psswd-input'].value })
+    })
+
+    ipc_renderer.on('exit_app_form_error', (event, arguments) => {
+        document.getElementById('admin-psswd-err-text').innerHTML = arguments.message;
+    })
+
+</script>
+<script>
+
+</script>
+
+</html>

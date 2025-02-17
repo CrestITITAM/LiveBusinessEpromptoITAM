@@ -12,12 +12,13 @@
   <body>
    <div class="container">
         <!--   <center class=""><img src="images/logo1.png"/></center>  -->
-    <div class="main-block">
+    <div class="main-block" style="margin: auto;">
       <div class="block-item">
          <center class="resolve-now">ePrompto ITAM Agent</center>        
         <br>
-         <button class="btn member login100-form-btn btn-css" onclick="UpdateMember()" style="font-size: 18px;background-color: #000864;color: white;"><span><b>Start</span></b></button>
-       
+         <!-- <button class="btn member login100-form-btn btn-css" onclick="UpdateMember()" style="font-size: 18px;background-color: #000864;color: white;"><span><b>Start</span></b></button> -->
+         <button class="btn member login100-form-btn btn-css" onclick="gotoLogin()" style="font-size: 18px;background-color: #000864;color: white;"><span><b>Start</span></b></button>
+       <!-- <a href="./login.html">login</a> -->
            <!-- <p><small>* Add new user/device, raise ticket</small></p><br> -->
 
         <!-- <button class="btn new login100-form-btn btn-css" onclick="createNewMember()" ><i class="fa fa-user-plus"></i><span>New Member</span></button>
@@ -28,19 +29,22 @@
   </body>
 </html>
 <script type="text/javascript">
-    const electron = require('electron');
-    const {BrowserWindow} = require('electron').remote;
-    const {ipcRenderer} = require('electron');
+    // const electron = require('electron');
+    // const {BrowserWindow} = require('electron').remote;
+    // const {ipcRenderer} = require('electron');
 
-     function createNewMember(){
-        const input_values = {};
-        ipcRenderer.send('create_new_member',input_values);
-     }
+    //  function createNewMember(){
+    //     const input_values = {};
+    //     ipcRenderer.send('create_new_member',input_values);
+    //  }
 
-     function UpdateMember(){
-        const input_values = {};
-        ipcRenderer.send('update_member',input_values);
-     }
+    //  function UpdateMember(){
+    //     const input_values = {};
+    //     ipcRenderer.send('update_member',input_values);
+    //  }
 
+    function gotoLogin(){
+        window.location.href = './views/login.html'
+    }
 
 </script> 
